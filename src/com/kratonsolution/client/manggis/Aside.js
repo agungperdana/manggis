@@ -34,107 +34,73 @@ export default class Aside extends React.Component {
 
                         <nav className="mt-2">
                             <ul className="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                                <li className="nav-item menu-open">
+                                <li className="nav-item">
                                     <a href="#" className="nav-link active">
-                                        <i className="nav-icon fas fa-tachometer-alt"></i>
+                                        <i className="nav-icon fas fa-address-book"></i>
                                         <p>
-                                            Dashboard
-                                            <i className="right fas fa-angle-left"></i>
+                                            Access
+                                            <i className="fas fa-angle-left right"></i>
                                         </p>
                                     </a>
-                                </li>
-                                <li className="nav-item">
-                                    <a href="pages/widgets.html" className="nav-link">
-                                    <i className="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Widgets
-                                        <span className="right badge badge-danger">New</span>
-                                    </p>
-                                    </a>
-                                </li>
-                                <li className="nav-item">
-                                    <a href="#" className="nav-link">
-                                    <i className="nav-icon fas fa-edit"></i>
-                                    <p>
-                                        Forms
-                                        <i className="fas fa-angle-left right"></i>
-                                    </p>
-                                    </a>
                                     <ul className="nav nav-treeview">
-                                    <li className="nav-item">
-                                        <a href="pages/forms/general.html" className="nav-link">
-                                            <i className="far fa-circle nav-icon"></i>
-                                            <p>General Elements</p>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a href="pages/forms/advanced.html" className="nav-link">
-                                            <i className="far fa-circle nav-icon"></i>
-                                            <p>Advanced Elements</p>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a href="pages/forms/editors.html" className="nav-link">
-                                            <i className="far fa-circle nav-icon"></i>
-                                            <p>Editors</p>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a href="pages/forms/validation.html" className="nav-link">
-                                            <i className="far fa-circle nav-icon"></i>
-                                            <p>Validation</p>
-                                        </a>
-                                    </li>
+                                        <li className="nav-item">
+                                            <a href="pages/forms/general.html" className="nav-link">
+                                                <i className="far fa-check-square nav-icon"></i>
+                                                <p>Protected Resource</p>
+                                            </a>
+                                        </li>
+                                        <li className="nav-item">
+                                            <a href="pages/forms/editors.html" className="nav-link">
+                                                <i className="far fa-check-square nav-icon"></i>
+                                                <p>Role</p>
+                                            </a>
+                                        </li>
+                                        <li className="nav-item">
+                                            <a href="pages/forms/editors.html" className="nav-link">
+                                                <i className="far fa-check-square nav-icon"></i>
+                                                <p>User</p>
+                                            </a>
+                                        </li>
                                     </ul>
                                 </li>
-                                <li className="nav-header">EXAMPLES</li>
-                                <li className="nav-item">
-                                    <a href="pages/calendar.html" className="nav-link">
-                                        <i className="nav-icon far fa-calendar-alt"></i>
-                                        <p>
-                                            Calendar
-                                            <span className="badge badge-info right">2</span>
-                                        </p>
-                                    </a>
-                                </li>
                                 <li className="nav-item">
                                     <a href="#" className="nav-link">
-                                        <i className="nav-icon far fa-plus-square"></i>
+                                        <i className="nav-icon fas fa-globe"></i>
                                         <p>
-                                            Extras
+                                            General
                                             <i className="fas fa-angle-left right"></i>
                                         </p>
                                     </a>
                                     <ul className="nav nav-treeview">
-                                    <li className="nav-item">
-                                        <a href="#" className="nav-link">
-                                        <i className="far fa-circle nav-icon"></i>
+                                        <li className="nav-item">
+                                            <a href="pages/forms/advanced.html" className="nav-link">
+                                                <i className="far fa-check-square nav-icon"></i>
+                                                <p>Geographic</p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li className="nav-item">
+                                    <a href="#" className="nav-link">
+                                        <i className="nav-icon fas fa-users"></i>
                                         <p>
-                                            Login & Register v2
+                                            CRM
                                             <i className="fas fa-angle-left right"></i>
                                         </p>
-                                        </a>
-                                        <ul className="nav nav-treeview">
+                                    </a>
+                                    <ul className="nav nav-treeview">
                                         <li className="nav-item">
-                                            <a href="pages/examples/login-v2.html" className="nav-link">
-                                                <i className="far fa-circle nav-icon"></i>
-                                                <p>Login v2</p>
+                                            <a href="pages/forms/advanced.html" className="nav-link">
+                                                <i className="far fa-check-square nav-icon"></i>
+                                                <p>Customer</p>
                                             </a>
                                         </li>
                                         <li className="nav-item">
-                                            <a href="pages/examples/register-v2.html" className="nav-link">
-                                                <i className="far fa-circle nav-icon"></i>
-                                                <p>Register v2</p>
+                                            <a href="pages/forms/advanced.html" className="nav-link">
+                                                <i className="far fa-check-square nav-icon"></i>
+                                                <p>Supplier</p>
                                             </a>
                                         </li>
-                                        </ul>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a href="pages/examples/lockscreen.html" className="nav-link">
-                                            <i className="far fa-circle nav-icon"></i>
-                                            <p>Lockscreen</p>
-                                        </a>
-                                    </li>
                                     </ul>
                                 </li>
                             </ul>
