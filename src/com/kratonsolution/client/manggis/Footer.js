@@ -4,11 +4,12 @@ export default class Footer extends React.Component {
 
     render() {
         return(
-            <footer className="main-footer">
-                <div className="float-right d-none d-sm-block">
-                    <b>Version 3.1.0</b> 
+            <footer className="sticky-footer bg-white">
+                <div className="container my-auto">
+                    <div className="copyright text-center my-auto">
+                        <span>Copyright &copy; www.kratonsolution.com 2021 - (html admin template by startboostrap-sb-admin-2)</span>
+                    </div>
                 </div>
-                <div>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.All rights reserved.</div> 
             </footer>
         )
     }

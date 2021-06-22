@@ -1,10 +1,6 @@
 import React from 'react';
-import Navbar from './Navbar';
-import Aside from './Aside';
-import Content from './Content';
-import Footer from './Footer';
 import Login from './Login';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import Dashboard from './Dashboard';
 
 export default function EntryPoint() {
 
@@ -13,14 +9,7 @@ export default function EntryPoint() {
     if(!token) {
         return <Login setToken={setToken}/>
     }
-
-
-    return(
-            <div>
-                <Navbar/>
-                <Aside/>
-                <Content/>
-                <Footer/>
-            </div>
-    )
+    else {
+        return <Dashboard token={token}/>
+    }
 }
