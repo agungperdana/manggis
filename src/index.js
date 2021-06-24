@@ -8,7 +8,7 @@ ReactDOM.render(
   <React.StrictMode>
     <EntryPoint />
   </React.StrictMode>,
-  document.getElementById('wrapper')
+  document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

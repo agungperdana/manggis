@@ -7,7 +7,8 @@ export default function Login({setToken}) {
 
     React.useEffect(()=>{
         
-        document.body.classList.add('bg-gradient-primary');
+        document.body.classList.remove('body');
+        document.body.classList.add('body-sign');
     },[]);
 
     const signIn = async () => {
@@ -34,56 +35,56 @@ export default function Login({setToken}) {
 
     return (
     
-        <div className="container">
-            <div className="row justify-content-center">
-                <div className="col-xl-10 col-lg-12 col-md-9">
+        <div className="center-sign">
+			<div className="panel panel-sign">
+				<div className="panel-title-sign mt-xl text-right">
+					<h2 className="title text-uppercase text-bold m-none">
+                        <i className="fa fa-user mr-xs"></i> Sign In
+                    </h2>
+				</div>
+				<div className="panel-body">
+						<div className="form-group mb-lg">
+							<label>Username</label>
+							<div className="input-group input-group-icon">
+								<input name="username" onChange={(e)=>setUsername(e.target.value)} type="text" className="form-control input-lg" />
+								<span className="input-group-addon">
+									<span className="icon icon-lg">
+										<i className="fa fa-user"></i>
+									</span>
+								</span>
+							</div>
+						</div>
 
-                    <div className="card o-hidden border-0 shadow-lg my-5">
-                        <div className="card-body p-0">
-                            <div className="row">
-                                <div className="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                                <div className="col-lg-6">
-                                    <div className="p-5">
-                                        <div className="text-center">
-                                            <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
-                                        </div>
-                                        <form>
-                                            <div className="form-group">
-                                                <input type="email" onChange={(e)=>setUsername(e.target.value)} 
-                                                        className="form-control form-control-user" placeholder="Enter Username or Email Address..."/>
-                                            </div>
-                                            <div className="form-group">
-                                                <input type="password" onChange={(e)=>setPassword(e.target.value)} 
-                                                        className="form-control form-control-user" placeholder="Password"/>
-                                            </div>
-                                            <div className="form-group">
-                                                <div className="custom-control custom-checkbox small">
-                                                    <input type="checkbox" className="custom-control-input" id="customCheck"/>
-                                                    <label className="custom-control-label" for="customCheck">Remember
-                                                        Me</label>
-                                                </div>
-                                            </div>
-                                            <a href="index.html" onClick={(e)=>{
-                                                e.preventDefault()
-                                                signIn()
-                                            }} className="btn btn-primary btn-user btn-block">
-                                                Login
-                                            </a>
-                                        </form>
-                                        <hr/>
-                                        <div className="text-center">
-                                            <a className="small" href="forgot-password.html">Forgot Password?</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+						<div className="form-group mb-lg">
+							<div className="clearfix">
+								<label className="pull-left">Password</label>
+								<a href="pages-recover-password.html" className="pull-right">Lost Password?</a>
+							</div>
+							<div className="input-group input-group-icon">
+								<input name="pwd" onChange={(e)=>setPassword(e.target.value)} type="password" className="form-control input-lg" />
+									<span className="input-group-addon">
+										<span className="icon icon-lg">
+											<i className="fa fa-lock"></i>
+										</span>
+									</span>
+								</div>
+							</div>
 
-                </div>
+							<div className="row">
+								<div className="col-sm-8">
+									<div className="checkbox-custom checkbox-default">
+										<input id="RememberMe" name="rememberme" type="checkbox"/>
+										<label htmlFor="RememberMe">Remember Me</label>
+									</div>
+								</div>
+								<div className="col-sm-4 text-right">
+									<button type="submit" onClick={()=>signIn()} className="btn btn-primary hidden-xs">Sign In</button>
+								</div>
+							</div>
+				</div>
+			</div>
 
-            </div>
-
-        </div>
+			<p className="text-center text-muted mt-md mb-md">&copy; Copyright 2018. All rights reserved. Template by <a href="https://colorlib.com">Colorlib</a>.</p>
+		</div>
     )
 }
