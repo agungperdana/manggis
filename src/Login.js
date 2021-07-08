@@ -24,6 +24,7 @@ export default function Login({setToken}) {
                 let json = await response.json();
                 if(json.status) {
                     setToken(json.token);
+                    console.log(json.token);
                 }
             }
             else {
@@ -44,7 +45,7 @@ export default function Login({setToken}) {
     return (
         <Layout style={{backgroundColor:"#FFFFFF"}}>
             <div align="center" style={{margin:20, padding:20, backgroundColor:"#FFFFFF", width:"100%"}}>
-                <Card title="Enter your login Information" bordered={true} style={{width:400, height:300}}>
+                <Card title="Enter your login Information" bordered={true} style={{width:"35%", height:"35%", borderRadius:10, borderColor:"#BFBFBF"}}>
                     <Input prefix={<UserOutlined/>} onChange={(e)=>setUsername(e.target.value)} placeholder="Enter login name" style={{width:"100%", height:40, marginBottom:10}}/>
                     <Input prefix={<KeyOutlined/>} onChange={(e)=>setPassword(e.target.value)} type="password" placeholder="Enter login password" style={{width:"100%", height:40 , marginBottom:10}}/>
                     <Checkbox style={{marginBottom:10, width:"100%", textAlign:"left", color:"red"}}>Auto login for 1 day</Checkbox>
