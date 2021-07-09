@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { 
     Layout,
     Breadcrumb,
@@ -18,8 +19,9 @@ import {
     PlusCircleOutlined
 } from '@ant-design/icons';
 
-export default function UserContent({token}) {
+export default function ModuleContent({token}) {
 
+  const navigation = useHistory();
   const[data, setData] = React.useState([]);
 
   const column = [
@@ -85,7 +87,7 @@ export default function UserContent({token}) {
               </Breadcrumb.Item>
             </Breadcrumb>
             <div style={{width:"100%", marginLeft:5}}>
-              <Button icon={<PlusCircleOutlined/>} type="link" size="small">
+              <Button icon={<PlusCircleOutlined/>} type="link" size="small" onClick={()=>navigation.push("/access/module/add")}>
                 Add new module
               </Button>
               <Button icon={<ZoomInOutlined/>} type="link" size="small">

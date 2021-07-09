@@ -22,7 +22,8 @@ import {
 
 import TopBar from './TopBar';
 import HomeContent from './HomeContent';
-import ModuleContent from './access/ModuleContent';
+import ModuleContent from './access/module/ModuleContent';
+import ModuleAddForm from './access/module/ModuleAddForm';
 import RoleContent from './access/RoleContent';
 import UserContent from './access/UserContent';
 
@@ -63,7 +64,7 @@ export default function ApplicationUI({token}) {
               <Menu.Divider/>
               <Menu.SubMenu title="Access" icon={<BuildOutlined/>}>
                 <Menu.Item icon={<AppstoreOutlined/>}>
-                  <Link to="/access/module">Module</Link>
+                  <Link exact to="/access/module/list">Module</Link>
                 </Menu.Item>
                 <Menu.Divider/>
                 <Menu.Item icon={<BlockOutlined/>}>
@@ -97,12 +98,16 @@ export default function ApplicationUI({token}) {
           </Layout.Sider>
           <Layout>
             <TopBar/>
+            <Link exact to="/access/module/add"/>
             <Switch>
               <Route exact path="/">
                 <HomeContent/>
               </Route>
-              <Route exact path="/access/module">
+              <Route exact path="/access/module/list">
                 <ModuleContent token={token}/>
+              </Route>
+              <Route exact path="/access/module/add">
+                <ModuleAddForm token={token}/>
               </Route>
               <Route exact path="/access/role">
                 <RoleContent/>
@@ -111,7 +116,6 @@ export default function ApplicationUI({token}) {
                 <UserContent token={token}/>
               </Route>
             </Switch>
-
           </Layout>
       </Layout>
     </Router>
