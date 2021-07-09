@@ -102,7 +102,7 @@ export default function ApplicationUI({token}) {
                 <HomeContent/>
               </Route>
               <Route exact path="/access/module">
-                <ModuleContent/>
+                <ModuleContent token={token}/>
               </Route>
               <Route exact path="/access/role">
                 <RoleContent/>
