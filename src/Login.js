@@ -48,7 +48,7 @@ export default function Login({setToken}) {
                 <Card title="Enter your login Information" bordered={true} style={{width:"35%", height:"35%", borderRadius:10, borderColor:"#BFBFBF"}}>
                     <Input prefix={<UserOutlined/>} onChange={(e)=>setUsername(e.target.value)} placeholder="Enter login name" style={{width:"100%", height:40, marginBottom:10}}/>
                     <Input prefix={<KeyOutlined/>} onChange={(e)=>setPassword(e.target.value)} type="password" placeholder="Enter login password" style={{width:"100%", height:40 , marginBottom:10}}/>
-                    <Checkbox style={{marginBottom:10, width:"100%", textAlign:"left", color:"red"}}>Auto login for 1 day</Checkbox>
+                    <Checkbox style={{marginBottom:10, width:"100%", textAlign:"left", color:"red"}}>Remember me</Checkbox>
                     <Button type="primary" htmlType="submit" style={{width:"100%", marginBottom:10}} onClick={()=>{signIn()}}>
                         Log in
                     </Button>

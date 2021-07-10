@@ -1,8 +1,10 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { 
     Badge, 
     Tooltip,
-    Avatar
+    Avatar,
+    Button
 } from 'antd';
 import { 
     AlertFilled,
@@ -11,7 +13,9 @@ import {
     PoweroffOutlined
 } from '@ant-design/icons';
 
-export default function TopBar({}){
+export default function TopBar({setToken}){
+
+    const navigation = useHistory();
 
     return(
         <div align="right" style={{
@@ -40,11 +44,10 @@ export default function TopBar({}){
                 </a>
             </Tooltip>
             <Tooltip placement="topLeft" title="Sign Out">
-                <a href="#">
-                <Avatar icon={<PoweroffOutlined/>} 
-                        style={{marginLeft:10, backgroundColor:"red"}} 
-                        size="small"/>
-                </a>
+                <Button shape="circle" size="small" icon={<PoweroffOutlined/>} 
+                        style={{marginLeft:10, backgroundColor:"#FF6961"}}
+                        onClick={()=>setToken(null)}>
+                </Button>
             </Tooltip>
         </div>
     )

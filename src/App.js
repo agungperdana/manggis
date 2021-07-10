@@ -7,7 +7,7 @@ function App() {
   const [token, setToken] = React.useState(null);
 
   if(token) {
-    return (<ApplicationUI token={token}/>)
+    return (<ApplicationUI token={token} setToken={setToken}/>)
   }
   else {
     return (<Login setToken={setToken}/>);

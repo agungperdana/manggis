@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { 
     Layout,
     Breadcrumb,
@@ -16,24 +16,26 @@ import {
 } from '@ant-design/icons';
 import DataToolbar from '../../component/DataToolbar';
 
-export default function ModuleAddForm({token}) {
+export default function ModuleEditForm({token}) {
 
   const navigation = useHistory();
-  const [form] = Form.useForm();
-  const [code, setCode] = React.useState(null);
-  const [name, setName] = React.useState(null);
-  const [note, setNote] = React.useState(null);
-  const [group, setGroup] = React.useState(null);
-  const [enabled, setEnabled] = React.useState(true);
+  const location = useLocation();
 
-  const create = async () => {
+  const [form] = Form.useForm();
+  const [code, setCode] = React.useState(location?.state?.rowData?.code);
+  const [name, setName] = React.useState(location?.state?.rowData?.name);
+  const [note, setNote] = React.useState(location?.state?.rowData?.note);
+  const [group, setGroup] = React.useState(location?.state?.rowData?.group);
+  const [enabled, setEnabled] = React.useState(location?.state?.rowData?.enabled);
+
+  const update = async () => {
 
     try {
 
       if(code && name && group) {
 
-        let response = await fetch('https://127.0.0.1:8585/modules/create', {
-          method: 'POST',
+        let response = await fetch('https://127.0.0.1:8585/modules/edit', {
+          method: 'PUT',
           headers: {
             Accept: 'application/json', 
             'Content-Type': 'application/json',
@@ -79,10 +81,10 @@ export default function ModuleAddForm({token}) {
                 <AppstoreOutlined/> Module
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                Add new
+                Edit
               </Breadcrumb.Item>
             </Breadcrumb>
-            <DataToolbar saveAction={create}
+            <DataToolbar saveAction={update} 
                         cancelAction={()=>navigation.push("/access/module/list")}
                         printAction={()=>navigation.push("/access/module/list")}/>
 
@@ -105,13 +107,13 @@ export default function ModuleAddForm({token}) {
                       form={form}>
                   
                   <Form.Item label="Code" name="code" rules={[{ required: true }]}>
-                    <Input onChange={(e)=>setCode(e.target.value)}/>
+                    <Input defaultValue={code} readOnly={true} onChange={(e)=>setCode(e.target.value)}/>
                   </Form.Item>
                   <Form.Item label="Name" name="name" rules={[{ required: true }]}>
-                    <Input onChange={(e)=>setName(e.target.value)}/>
+                    <Input defaultValue={name}  onChange={(e)=>setName(e.target.value)}/>
                   </Form.Item>
                   <Form.Item label="Group" name="group" rules={[{ required: true }]}>
-                    <Select onSelect={(value)=>setGroup(value)}>
+                    <Select defaultValue={group} onSelect={(value)=>setGroup(value)}>
                       <Select.Option value="SYSTEM">SYSTEM</Select.Option>
                       <Select.Option value="SECURITY">SECURITY</Select.Option>
                     </Select>
@@ -120,7 +122,7 @@ export default function ModuleAddForm({token}) {
                     <Checkbox checked={enabled} onChange={(e)=>setEnabled(e.target.value)}/>
                   </Form.Item>
                   <Form.Item label="Description" name="note">
-                    <Input onChange={(e)=>setNote(e.target.value)}/>
+                    <Input defaultValue={note}  onChange={(e)=>setNote(e.target.value)}/>
                   </Form.Item>
                 </Form>
             </div>

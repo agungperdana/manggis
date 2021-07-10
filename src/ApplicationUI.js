@@ -20,14 +20,18 @@ import {
   Link
 } from "react-router-dom";
 
-import TopBar from './TopBar';
+import TopBar from './component/TopBar';
 import HomeContent from './HomeContent';
+
 import ModuleContent from './access/module/ModuleContent';
 import ModuleAddForm from './access/module/ModuleAddForm';
+import ModuleEditForm from './access/module/ModuleEditForm';
+
 import RoleContent from './access/RoleContent';
 import UserContent from './access/UserContent';
 
-export default function ApplicationUI({token}) {
+
+export default function ApplicationUI({token, setToken}) {
   return (
     <Router>
       <Layout style={{display:"flex", height:"100%", width:"100%"}}>
@@ -97,8 +101,9 @@ export default function ApplicationUI({token}) {
             </Menu>
           </Layout.Sider>
           <Layout>
-            <TopBar/>
+            <TopBar setToken={setToken}/>
             <Link exact to="/access/module/add"/>
+            <Link exact to="/access/module/edit"/>
             <Switch>
               <Route exact path="/">
                 <HomeContent/>
@@ -108,6 +113,9 @@ export default function ApplicationUI({token}) {
               </Route>
               <Route exact path="/access/module/add">
                 <ModuleAddForm token={token}/>
+              </Route>
+              <Route exact path="/access/module/edit">
+                <ModuleEditForm token={token}/>
               </Route>
               <Route exact path="/access/role">
                 <RoleContent/>
