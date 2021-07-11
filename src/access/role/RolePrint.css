@@ -1,0 +1,10 @@
+@media print {
+    .out {
+        overflow: hidden;
+        border: 0;
+    }
+
+    .cont {
+        display: block;
+    }
+}

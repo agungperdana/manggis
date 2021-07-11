@@ -27,7 +27,10 @@ import ModuleContent from './access/module/ModuleContent';
 import ModuleAddForm from './access/module/ModuleAddForm';
 import ModuleEditForm from './access/module/ModuleEditForm';
 
-import RoleContent from './access/RoleContent';
+import RoleContent from './access/role/RoleContent';
+import RoleAddForm from './access/role/RoleAddForm';
+import RoleEditForm from './access/role/RoleEditForm';
+
 import UserContent from './access/UserContent';
 
 
@@ -72,7 +75,7 @@ export default function ApplicationUI({token, setToken}) {
                 </Menu.Item>
                 <Menu.Divider/>
                 <Menu.Item icon={<BlockOutlined/>}>
-                  <Link to="/access/role">Role</Link>
+                  <Link to="/access/role/list">Role</Link>
                 </Menu.Item>
                 <Menu.Divider/>
                 <Menu.Item icon={<UserOutlined/>}>
@@ -104,6 +107,8 @@ export default function ApplicationUI({token, setToken}) {
             <TopBar setToken={setToken}/>
             <Link exact to="/access/module/add"/>
             <Link exact to="/access/module/edit"/>
+            <Link exact to="/access/role/add"/>
+            <Link exact to="/access/role/edit"/>
             <Switch>
               <Route exact path="/">
                 <HomeContent/>
@@ -117,8 +122,14 @@ export default function ApplicationUI({token, setToken}) {
               <Route exact path="/access/module/edit">
                 <ModuleEditForm token={token}/>
               </Route>
-              <Route exact path="/access/role">
-                <RoleContent/>
+              <Route exact path="/access/role/list">
+                <RoleContent token={token}/>
+              </Route>
+              <Route exact path="/access/role/add">
+                <RoleAddForm token={token}/>
+              </Route>
+              <Route exact path="/access/role/edit">
+                <RoleEditForm token={token}/>
               </Route>
               <Route exact path="/access/user">
                 <UserContent token={token}/>

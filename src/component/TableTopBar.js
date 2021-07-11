@@ -1,15 +1,16 @@
 import React from 'react';
 
 import { 
-    Button 
+    Button
 } from 'antd';
 
 import { 
+  CloudSyncOutlined,
     PlusCircleOutlined,
     ZoomInOutlined
 } from '@ant-design/icons';
 
-export default function TableTopBar({addDocAction, serachDocAction}) {
+export default function TableTopBar({addDocAction, serachDocAction, reloadAction}) {
 
     return(
         <div style={{width:"100%", marginLeft:5}}>
@@ -18,6 +19,9 @@ export default function TableTopBar({addDocAction, serachDocAction}) {
               </Button>
               <Button icon={<ZoomInOutlined/>} type="link" size="small" onClick={serachDocAction}>
                 Search data
+              </Button>
+              <Button icon={<CloudSyncOutlined/>} type="link" size="small" onClick={reloadAction}>
+                Reload data
               </Button>
         </div>
     )

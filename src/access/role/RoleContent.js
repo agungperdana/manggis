@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { 
     Layout,
     Breadcrumb,
-    Button,
     Modal,
     Table,
     notification,
@@ -12,16 +11,14 @@ import {
 
 import { 
     BuildOutlined,
-    AppstoreOutlined,
-    ZoomInOutlined,
-    PlusCircleOutlined
+    BlockOutlined,
 } from '@ant-design/icons';
-import RowToolbar from '../../component/RowToolbar';
-import ModulePrint from './ModulePrint';
-import TableTopBar from '../../component/TableTopBar';
-import Search from 'antd/lib/transfer/search';
 
-export default function ModuleContent({token}) {
+import RowToolbar from '../../component/RowToolbar';
+import ModulePrint from './RolePrint';
+import TableTopBar from '../../component/TableTopBar';
+
+export default function RoleContent({token}) {
 
   const navigation = useHistory();
   const [data, setData] = React.useState([]);
@@ -35,7 +32,7 @@ export default function ModuleContent({token}) {
     if(searchKey) {
       console.log(searchKey);
       try {
-        let response = await fetch('https://127.0.0.1:8585/modules/filter/0/50/'+searchKey, {
+        let response = await fetch('https://127.0.0.1:8585/roles/filter/0/50/'+searchKey, {
             method: 'GET',
             headers: {
               Accept: 'application/json', 
@@ -59,16 +56,10 @@ export default function ModuleContent({token}) {
     }
   }
 
-
-  const print = async () => {
-
-
-  }
-
   const loadData = async () => {
 
     try {
-      let response = await fetch('https://127.0.0.1:8585/modules/all-modules/0/50', {
+      let response = await fetch('https://127.0.0.1:8585/roles/all-roles/0/50', {
           method: 'GET',
           headers: {
             Accept: 'application/json', 
@@ -99,7 +90,7 @@ export default function ModuleContent({token}) {
     try {
       
       if(code) {
-        let response = await fetch('https://127.0.0.1:8585/modules/delete/', {
+        let response = await fetch('https://127.0.0.1:8585/roles/delete', {
           method: 'DELETE',
           headers: {
             Accept: 'application/json', 
@@ -129,7 +120,7 @@ export default function ModuleContent({token}) {
   const column = [
     {title:"", dataIndex:"", key:"Action", width:110, render:(txt, row)=>(
         <RowToolbar delAction={()=>remove(row.code)} 
-                  editAction={()=>navigation.push("/access/module/edit", {rowData:row})}
+                  editAction={()=>navigation.push("/access/role/edit", {rowData:row})}
                   printAction={()=>{
                     setRow(row);
                     setVisible(true);
@@ -138,7 +129,6 @@ export default function ModuleContent({token}) {
     {title:"Code", dataIndex:"code", key:"Code"},
     {title:"Name", dataIndex:"name", key:"Name"},
     {title:"Description", dataIndex:"note", key:"Note"},
-    {title:"Group", dataIndex:"group", key:"Group", width:100},
     {title:"Enabled", dataIndex:"enabled", key:"Locked", width:50, render:(txt)=>txt?"Yes":"No"}
   ]
 
@@ -150,17 +140,18 @@ export default function ModuleContent({token}) {
                 <BuildOutlined/> Access
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <AppstoreOutlined/> Module
+                <BlockOutlined/> Role
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 List
               </Breadcrumb.Item>
             </Breadcrumb>
-            <TableTopBar addDocAction={()=>navigation.push("/access/module/add")}
+            <TableTopBar addDocAction={()=>navigation.push("/access/role/add")}
                         serachDocAction={setOpenSearch} 
                         reloadAction={()=>loadData()}/>
             <div style={{
                           width:"99%",
+                          height:"88%",
                           backgroundColor:"#FFFFFF", 
                           padding:5,
                           margin:5, 
