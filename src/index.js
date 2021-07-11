@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
-import EntryPoint from './com/kratonsolution/client/manggis/EntryPoint';
 
 ReactDOM.render(
   <React.StrictMode>
-    <EntryPoint />
+    <App />
   </React.StrictMode>,
   document.getElementById('root')
 );
