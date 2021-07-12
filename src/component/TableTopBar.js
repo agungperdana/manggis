@@ -15,7 +15,7 @@ export default function TableTopBar({addDocAction, serachDocAction, reloadAction
     return(
         <div style={{width:"100%", marginLeft:5}}>
               <Button icon={<PlusCircleOutlined/>} type="link" size="small" onClick={addDocAction}>
-                Add new module
+                Add new
               </Button>
               <Button icon={<ZoomInOutlined/>} type="link" size="small" onClick={serachDocAction}>
                 Search data

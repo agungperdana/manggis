@@ -7,9 +7,7 @@ import {
     CheckCircleTwoTone
 } from '@ant-design/icons';
 
-import './RolePrint.css';
-
-export default function RolePrint({visible, confirmAction, cancelAction, data}) {
+export default function UserPrint({visible, confirmAction, cancelAction, data}) {
 
     return(
         <Modal className="out" visible={visible} title="Review document" width={750} okText="Print" onOk={confirmAction} onCancel={cancelAction}>

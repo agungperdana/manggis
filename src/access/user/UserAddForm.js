@@ -16,7 +16,7 @@ import {
 } from '@ant-design/icons';
 import DataToolbar from '../../component/DataToolbar';
 
-export default function RoleAddForm({token}) {
+export default function UserAddForm({token}) {
 
   const navigation = useHistory();
   const [form] = Form.useForm();

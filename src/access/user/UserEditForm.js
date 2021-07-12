@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { 
     Layout,
     Breadcrumb,
@@ -15,63 +15,53 @@ import {
     BlockOutlined,
 } from '@ant-design/icons';
 import DataToolbar from '../../component/DataToolbar';
+import UserPrint from './UserPrint';
 
-export default function RoleAddForm({token}) {
+export default function UserEditForm({token}) {
 
   const navigation = useHistory();
+  const location = useLocation();
   const [form] = Form.useForm();
-  const [code, setCode] = React.useState(null);
-  const [name, setName] = React.useState(null);
-  const [note, setNote] = React.useState(null);
-  const [enabled, setEnabled] = React.useState(true);
+  const [visible, setVisible] = React.useState(false);
+  const [code, setCode] = React.useState(location?.state?.rowData?.code);
+  const [name, setName] = React.useState(location?.state?.rowData?.name);
+  const [note, setNote] = React.useState(location?.state?.rowData?.note);
+  const [enabled, setEnabled] = React.useState(location?.state?.rowData?.enabled);
   const [modules, setModules] = React.useState([]);
 
-  const getModules = async () => {
-    try {
+  const roleMods = async () => {
 
-      let response = await fetch('https://127.0.0.1:8585/modules/all-modules/0/1000', {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json', 
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer '+token,
-          }
-        });
+    if(location?.state?.rowData?.modules) {
+      
+      let objs = [];
+      location.state.rowData.modules.map(row=>{
+        objs.push({
+          moduleCode:row.moduleCode,
+          moduleName:row.moduleName,
+          moduleGroup:row.moduleGroup,
+          read:row.read,
+          add:row.add,
+          edit:row.edit,
+          delete:row.delete,
+          print:row.print
+        })
+      });
 
-        let json = await response.json();
-        if(json.status) {
-          
-          let mods = [];
-
-          json.result.map(obj=>{
-            mods.push({
-              moduleCode:obj?.code,
-              moduleName:obj?.name,
-              moduleGroup:obj?.group,
-              read:false,
-              add:false,
-              edit:false,
-              delete:false,
-              print:false
-            });
-          })
-
-          mods.sort();
-          setModules(mods);
-        }
-    } 
-    catch (error) {}
+      objs.sort();
+      setModules(objs)
+    }
   }
 
-  React.useEffect(()=>{getModules()},[])
+  React.useEffect(()=>{roleMods()},[])
 
   const create = async () => {
 
     try {
 
       if(code && name) {
-        let response = await fetch('https://127.0.0.1:8585/roles/create', {
-          method: 'POST',
+
+        let response = await fetch('https://127.0.0.1:8585/roles/update', {
+          method: 'PUT',
           headers: {
             Accept: 'application/json', 
             'Content-Type': 'application/json',
@@ -110,14 +100,15 @@ export default function RoleAddForm({token}) {
   const column = [
     {title:"Code", dataIndex:"moduleCode", key:"Code", width:200},
     {title:"Name", dataIndex:"moduleName", key:"Name"},
-    {title:"Read", dataIndex:"", key:"read", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).read=e.target.checked}/>},
-    {title:"Add", dataIndex:"", key:"add", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).add=e.target.checked}/>},
-    {title:"Edit", dataIndex:"", key:"edit", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).edit=e.target.checked}/>},
-    {title:"Delete", dataIndex:"", key:"delete", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).delete=e.target.checked}/>},
-    {title:"Print", dataIndex:"", key:"print", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).print=e.target.checked}/>}
+    {title:"Read", dataIndex:"", key:"read", width:65, render:(text, row)=><Checkbox defaultChecked={modules.find(md=>md.moduleCode===row.moduleCode)?.read} onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).read=e.target.checked}/>},
+    {title:"Add", dataIndex:"", key:"add", width:65, render:(text, row)=><Checkbox defaultChecked={modules.find(md=>md.moduleCode===row.moduleCode)?.add} onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).add=e.target.checked}/>},
+    {title:"Edit", dataIndex:"", key:"edit", width:65, render:(text, row)=><Checkbox defaultChecked={modules.find(md=>md.moduleCode===row.moduleCode)?.edit} onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).edit=e.target.checked}/>},
+    {title:"Delete", dataIndex:"", key:"delete", width:65, render:(text, row)=><Checkbox defaultChecked={modules.find(md=>md.moduleCode===row.moduleCode)?.delete} onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).delete=e.target.checked}/>},
+    {title:"Print", dataIndex:"", key:"print", width:65, render:(text, row)=><Checkbox defaultChecked={modules.find(md=>md.moduleCode===row.moduleCode)?.print} onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).print=e.target.checked}/>}
   ]
 
   return (
+      <>
         <Layout.Content style={{backgroundColor:"#FFFFFF"}}>
             <Breadcrumb style={{padding:10}}>
               <Breadcrumb.Item>
@@ -127,12 +118,12 @@ export default function RoleAddForm({token}) {
                 <BlockOutlined/> Role
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                Add new
+                Edit
               </Breadcrumb.Item>
             </Breadcrumb>
             <DataToolbar saveAction={create}
                         cancelAction={()=>navigation.push("/access/role/list")}
-                        printAction={()=>{}}/>
+                        printAction={()=>setVisible(true)}/>
 
             <div style={{
                           width:"99%", 
@@ -153,16 +144,16 @@ export default function RoleAddForm({token}) {
                       form={form}>
                   
                   <Form.Item label="Code" name="code" rules={[{ required: true }]}>
-                    <Input onChange={(e)=>setCode(e.target.value)}/>
+                    <Input defaultValue={code} onChange={(e)=>setCode(e.target.value)}/>
                   </Form.Item>
                   <Form.Item label="Name" name="name" rules={[{ required: true }]}>
-                    <Input onChange={(e)=>setName(e.target.value)}/>
+                    <Input defaultValue={name} onChange={(e)=>setName(e.target.value)}/>
                   </Form.Item>
                   <Form.Item label="Enabled" name="enabled" rules={[{ required: true }]}>
-                    <Checkbox checked={enabled} onChange={(e)=>setEnabled(e.target.value)}/>
+                    <Checkbox defaultChecked={enabled} onChange={(e)=>setEnabled(e.target.value)}/>
                   </Form.Item>
                   <Form.Item label="Description" name="note">
-                    <Input onChange={(e)=>setNote(e.target.value)}/>
+                    <Input defaultValue={note} onChange={(e)=>setNote(e.target.value)}/>
                   </Form.Item>
                 </Form>
                 <Table dataSource={modules} 
@@ -171,5 +162,7 @@ export default function RoleAddForm({token}) {
                         size="small"/>
             </div>
         </Layout.Content>
+        <UserPrint visible={visible} data={location?.state?.rowData} cancelAction={()=>setVisible(false)}/>
+      </>
   )
 }

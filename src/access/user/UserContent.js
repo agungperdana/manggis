@@ -11,14 +11,15 @@ import {
 
 import { 
     BuildOutlined,
-    BlockOutlined,
+    UserOutlined,
+    CheckCircleTwoTone,
 } from '@ant-design/icons';
 
 import RowToolbar from '../../component/RowToolbar';
-import ModulePrint from './RolePrint';
+import UserPrint from './UserPrint';
 import TableTopBar from '../../component/TableTopBar';
 
-export default function RoleContent({token}) {
+export default function UserContent({token}) {
 
   const navigation = useHistory();
   const [data, setData] = React.useState([]);
@@ -32,7 +33,7 @@ export default function RoleContent({token}) {
     if(searchKey) {
  
       try {
-        let response = await fetch('https://127.0.0.1:8585/roles/filter/0/50/'+searchKey, {
+        let response = await fetch('https://127.0.0.1:8585/users/filter/0/50/'+searchKey, {
             method: 'GET',
             headers: {
               Accept: 'application/json', 
@@ -59,7 +60,7 @@ export default function RoleContent({token}) {
   const loadData = async () => {
 
     try {
-      let response = await fetch('https://127.0.0.1:8585/roles/all-roles/0/50', {
+      let response = await fetch('https://127.0.0.1:8585/users/all-users/0/1000', {
           method: 'GET',
           headers: {
             Accept: 'application/json', 
@@ -71,6 +72,7 @@ export default function RoleContent({token}) {
       let json = await response.json();
       if(json.status) {
           setData(json.result);
+          console.log(data);
       }
     } 
     catch (error) {
@@ -84,13 +86,12 @@ export default function RoleContent({token}) {
 
   React.useEffect(()=>{loadData()},[]);
 
-  const remove = async (code) => {
+  const remove = async (email) => {
 
-    console.log(code);
     try {
       
-      if(code) {
-        let response = await fetch('https://127.0.0.1:8585/roles/delete', {
+      if(email) {
+        let response = await fetch('https://127.0.0.1:8585/users/delete', {
           method: 'DELETE',
           headers: {
             Accept: 'application/json', 
@@ -98,7 +99,7 @@ export default function RoleContent({token}) {
             Authorization: 'Bearer '+token,
           },
           body: JSON.stringify({
-            'code':code
+            'email':email
           })
         });
 
@@ -119,17 +120,17 @@ export default function RoleContent({token}) {
 
   const column = [
     {title:"", dataIndex:"", key:"Action", width:110, render:(txt, row)=>(
-        <RowToolbar delAction={()=>remove(row.code)} 
-                  editAction={()=>navigation.push("/access/role/edit", {rowData:row})}
+        <RowToolbar delAction={()=>remove(row.email)} 
+                  editAction={()=>navigation.push("/access/users/edit", {rowData:row})}
                   printAction={()=>{
                     setRow(row);
                     setVisible(true);
                   }}/>
     )},
-    {title:"Code", dataIndex:"code", key:"Code"},
-    {title:"Name", dataIndex:"name", key:"Name"},
-    {title:"Description", dataIndex:"note", key:"Note"},
-    {title:"Enabled", dataIndex:"enabled", key:"Locked", width:50, render:(txt)=>txt?"Yes":"No"}
+    {title:"Email", dataIndex:"email", key:"email"},
+    {title:"Name", dataIndex:"name", key:"Name", width:250},
+    {title:"Enabled", dataIndex:"enabled", key:"Enabled", width:100, render:(txt)=>txt?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""},
+    {title:"Locked", dataIndex:"locked", key:"Locked", width:100, render:(txt)=>txt?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}
   ]
 
   return (
@@ -140,7 +141,7 @@ export default function RoleContent({token}) {
                 <BuildOutlined/> Access
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <BlockOutlined/> Role
+                <UserOutlined/> User
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 List
@@ -163,7 +164,7 @@ export default function RoleContent({token}) {
               <Table dataSource={data} columns={column} style={{width:"100%"}} size="small"/>
             </div>
         </Layout.Content>
-        <ModulePrint visible={visible} confirmAction={()=>{}} cancelAction={() => setVisible(false)} data={row}/>
+        <UserPrint visible={visible} confirmAction={()=>{}} cancelAction={() => setVisible(false)} data={row}/>
         <Modal title="Search data" visible={openSearch} onCancel={()=>setOpenSearch(false)} onOk={()=>{
           setOpenSearch(false);
           search()

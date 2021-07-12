@@ -12,9 +12,6 @@ export default function Login({setToken}) {
         try {
 
             if(username && password) {
-
-                console.log('username['+username+'], password['+password+']')
-
                 let response = await fetch('https://127.0.0.1:8585/login', {
                     method: 'POST',
                     headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
@@ -24,7 +21,6 @@ export default function Login({setToken}) {
                 let json = await response.json();
                 if(json.status) {
                     setToken(json.token);
-                    console.log(json.token);
                 }
             }
             else {

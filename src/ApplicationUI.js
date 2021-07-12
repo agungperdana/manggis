@@ -31,8 +31,9 @@ import RoleContent from './access/role/RoleContent';
 import RoleAddForm from './access/role/RoleAddForm';
 import RoleEditForm from './access/role/RoleEditForm';
 
-import UserContent from './access/UserContent';
-
+import UserContent from './access/user/UserContent';
+import UserAddForm from './access/user/UserAddForm';
+import UserEditForm from './access/user/UserEditForm';
 
 export default function ApplicationUI({token, setToken}) {
   return (
@@ -79,7 +80,7 @@ export default function ApplicationUI({token, setToken}) {
                 </Menu.Item>
                 <Menu.Divider/>
                 <Menu.Item icon={<UserOutlined/>}>
-                  <Link to="/access/user">User</Link>
+                  <Link to="/access/user/list">User</Link>
                 </Menu.Item>
               </Menu.SubMenu>
               <Menu.Divider/>
@@ -109,6 +110,8 @@ export default function ApplicationUI({token, setToken}) {
             <Link exact to="/access/module/edit"/>
             <Link exact to="/access/role/add"/>
             <Link exact to="/access/role/edit"/>
+            <Link exact to="/access/user/add"/>
+            <Link exact to="/access/user/edit"/>
             <Switch>
               <Route exact path="/">
                 <HomeContent/>
@@ -131,8 +134,14 @@ export default function ApplicationUI({token, setToken}) {
               <Route exact path="/access/role/edit">
                 <RoleEditForm token={token}/>
               </Route>
-              <Route exact path="/access/user">
+              <Route exact path="/access/user/list">
                 <UserContent token={token}/>
+              </Route>
+              <Route exact path="/access/user/add">
+                <UserAddForm token={token}/>
+              </Route>
+              <Route exact path="/access/user/edit">
+                <UserEditForm token={token}/>
               </Route>
             </Switch>
           </Layout>
