@@ -2,7 +2,7 @@ import React from 'react';
 import { Layout, Input, Checkbox, Button, Card, notification} from 'antd';
 import { UserOutlined, KeyOutlined } from '@ant-design/icons';
 
-export default function Login({setToken}) {
+export default function Login({setToken, setUser}) {
 
     const [username, setUsername] = React.useState(null);
     const [password, setPassword] = React.useState(null);
@@ -21,6 +21,7 @@ export default function Login({setToken}) {
                 let json = await response.json();
                 if(json.status) {
                     setToken(json.token);
+                    setUser(json.user);
                 }
             }
             else {

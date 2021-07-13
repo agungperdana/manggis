@@ -61,11 +61,11 @@ export default function RolePrint({visible, confirmAction, cancelAction, data}) 
                             <tr>
                                 <td align="left">{row.moduleCode}</td>
                                 <td align="left">{row.moduleName}</td>
-                                <td align="center">{row.read?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}</td>
-                                <td align="center">{row.add?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}</td>
-                                <td align="center">{row.edit?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}</td>
-                                <td align="center">{row.delete?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}</td>
-                                <td align="center">{row.print?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}</td>
+                                <td align="center">{row.read?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"}</td>
+                                <td align="center">{row.add?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"}</td>
+                                <td align="center">{row.edit?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"}</td>
+                                <td align="center">{row.delete?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"}</td>
+                                <td align="center">{row.print?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"}</td>
                             </tr>
                         )
                     })

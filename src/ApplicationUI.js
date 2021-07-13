@@ -35,7 +35,7 @@ import UserContent from './access/user/UserContent';
 import UserAddForm from './access/user/UserAddForm';
 import UserEditForm from './access/user/UserEditForm';
 
-export default function ApplicationUI({token, setToken}) {
+export default function ApplicationUI({token, setToken, user}) {
   return (
     <Router>
       <Layout style={{display:"flex", height:"100%", width:"100%"}}>
@@ -105,7 +105,7 @@ export default function ApplicationUI({token, setToken}) {
             </Menu>
           </Layout.Sider>
           <Layout>
-            <TopBar setToken={setToken}/>
+            <TopBar setToken={setToken} user={user}/>
             <Link exact to="/access/module/add"/>
             <Link exact to="/access/module/edit"/>
             <Link exact to="/access/role/add"/>

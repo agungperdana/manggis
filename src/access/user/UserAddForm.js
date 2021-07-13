@@ -12,7 +12,7 @@ import {
 
 import { 
     BuildOutlined,
-    BlockOutlined,
+    UserOutlined,
 } from '@ant-design/icons';
 import DataToolbar from '../../component/DataToolbar';
 
@@ -20,16 +20,18 @@ export default function UserAddForm({token}) {
 
   const navigation = useHistory();
   const [form] = Form.useForm();
-  const [code, setCode] = React.useState(null);
+  const [email, setEmail] = React.useState(null);
   const [name, setName] = React.useState(null);
-  const [note, setNote] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
+  const [rePassword, setRePassword] = React.useState(null);
+  const [locked, setLocked] = React.useState(false);
   const [enabled, setEnabled] = React.useState(true);
-  const [modules, setModules] = React.useState([]);
+  const [roles, setRoles] = React.useState([]);
 
-  const getModules = async () => {
+  const getRoles = async () => {
     try {
 
-      let response = await fetch('https://127.0.0.1:8585/modules/all-modules/0/1000', {
+      let response = await fetch('https://127.0.0.1:8585/roles/all-roles/0/1000', {
           method: 'GET',
           headers: {
             Accept: 'application/json', 
@@ -44,33 +46,31 @@ export default function UserAddForm({token}) {
           let mods = [];
 
           json.result.map(obj=>{
-            mods.push({
-              moduleCode:obj?.code,
-              moduleName:obj?.name,
-              moduleGroup:obj?.group,
-              read:false,
-              add:false,
-              edit:false,
-              delete:false,
-              print:false
-            });
+
+            if(obj.enabled) {
+              mods.push({
+                roleCode:obj?.code,
+                roleName:obj?.name,
+                enabled:false
+              });
+            }            
           })
 
           mods.sort();
-          setModules(mods);
+          setRoles(mods);
         }
     } 
     catch (error) {}
   }
 
-  React.useEffect(()=>{getModules()},[])
+  React.useEffect(()=>{getRoles()},[])
 
   const create = async () => {
 
     try {
 
-      if(code && name) {
-        let response = await fetch('https://127.0.0.1:8585/roles/create', {
+      if(email && name && password && rePassword && (password === rePassword)) {
+        let response = await fetch('https://127.0.0.1:8585/users/create', {
           method: 'POST',
           headers: {
             Accept: 'application/json', 
@@ -78,23 +78,25 @@ export default function UserAddForm({token}) {
             Authorization: 'Bearer '+token,
           },
           body:JSON.stringify({
-            'code':code,
+            'email':email,
             'name':name,
-            'note':note,
+            'password':password,
+            'rePassword':rePassword,
             'enabled':enabled,
-            'modules':modules
+            'locked':locked,
+            'roles':roles
           })
         });
 
         let json = await response.json();
         if(json.status) {
-          navigation.push("/access/role/list");
+          navigation.push("/access/user/list");
         }
       }
       else {
         notification.error({
           message:"Error", 
-          description:"code, name or group field cannot be empty."
+          description:"email/name/password field cannot be empty."
         });
       }     
     } 
@@ -108,13 +110,9 @@ export default function UserAddForm({token}) {
   }
 
   const column = [
-    {title:"Code", dataIndex:"moduleCode", key:"Code", width:200},
-    {title:"Name", dataIndex:"moduleName", key:"Name"},
-    {title:"Read", dataIndex:"", key:"read", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).read=e.target.checked}/>},
-    {title:"Add", dataIndex:"", key:"add", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).add=e.target.checked}/>},
-    {title:"Edit", dataIndex:"", key:"edit", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).edit=e.target.checked}/>},
-    {title:"Delete", dataIndex:"", key:"delete", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).delete=e.target.checked}/>},
-    {title:"Print", dataIndex:"", key:"print", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).print=e.target.checked}/>}
+    {title:"Code", dataIndex:"roleCode", key:"Code", width:200},
+    {title:"Name", dataIndex:"roleName", key:"Name"},
+    {title:"Enabled", dataIndex:"", key:"enabled", width:65, render:(text, row)=><Checkbox onChange={(e)=>roles.find(md=>md.roleCode===row.roleCode).enabled=e.target.checked}/>},
   ]
 
   return (
@@ -124,14 +122,14 @@ export default function UserAddForm({token}) {
                 <BuildOutlined/> Access
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <BlockOutlined/> Role
+                <UserOutlined/> User
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 Add new
               </Breadcrumb.Item>
             </Breadcrumb>
             <DataToolbar saveAction={create}
-                        cancelAction={()=>navigation.push("/access/role/list")}
+                        cancelAction={()=>navigation.push("/access/user/list")}
                         printAction={()=>{}}/>
 
             <div style={{
@@ -147,25 +145,31 @@ export default function UserAddForm({token}) {
                           flexWrap:"wrap",
                           alignContent:"flex-start"}}>
 
-                <Form style={{width:"60%", alignSelf:"flex-start"}} 
+                <Form style={{width:"60%", alignSelf:"flex-start", padding:3}} 
                       labelCol={{span:8}} 
                       wrapperCol={{span:16}} 
                       form={form}>
                   
-                  <Form.Item label="Code" name="code" rules={[{ required: true }]}>
-                    <Input onChange={(e)=>setCode(e.target.value)}/>
+                  <Form.Item label="Email" name="email" rules={[{ required: true }]}>
+                    <Input onChange={(e)=>setEmail(e.target.value)}/>
                   </Form.Item>
                   <Form.Item label="Name" name="name" rules={[{ required: true }]}>
                     <Input onChange={(e)=>setName(e.target.value)}/>
                   </Form.Item>
+                  <Form.Item label="Password" name="password" rules={[{ required: true }]}>
+                    <Input.Password onChange={(e)=>setPassword(e.target.value)}/>
+                  </Form.Item>
+                  <Form.Item label="Re Type Password" name="rePassword" rules={[{ required: true }]}>
+                    <Input.Password onChange={(e)=>setRePassword(e.target.value)}/>
+                  </Form.Item>
                   <Form.Item label="Enabled" name="enabled" rules={[{ required: true }]}>
                     <Checkbox checked={enabled} onChange={(e)=>setEnabled(e.target.value)}/>
                   </Form.Item>
-                  <Form.Item label="Description" name="note">
-                    <Input onChange={(e)=>setNote(e.target.value)}/>
+                  <Form.Item label="Locked" name="locked" rules={[{ required: true }]}>
+                    <Checkbox checked={locked} onChange={(e)=>setLocked(e.target.value)}/>
                   </Form.Item>
                 </Form>
-                <Table dataSource={modules} 
+                <Table dataSource={roles} 
                         columns={column} 
                         style={{width:"100%"}} 
                         size="small"/>

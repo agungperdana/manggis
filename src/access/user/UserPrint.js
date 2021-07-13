@@ -14,9 +14,9 @@ export default function UserPrint({visible, confirmAction, cancelAction, data}) 
             <table className="cont" style={{border:"none", width:"70%"}}>
             <tbody>
                 <tr>
-                    <td align="left" width={100}>Code</td>
+                    <td align="left" width={100}>Email</td>
                     <td width={10}>:</td>
-                    <td align="left">{data?.code}</td>
+                    <td align="left">{data?.email}</td>
                 </tr>
                 <tr>
                     <td align="left">Name</td>
@@ -29,9 +29,9 @@ export default function UserPrint({visible, confirmAction, cancelAction, data}) 
                     <td align="left">{data?.enabled?"Yes":"No"}</td>
                 </tr>
                 <tr>
-                    <td align="left">Description</td>
+                    <td align="left">Locked</td>
                     <td>:</td>
-                    <td align="left">{data?.note}</td>
+                    <td align="left">{data?.locked?"Yes":"No"}</td>
                 </tr>
             </tbody>
             </table>
@@ -46,24 +46,16 @@ export default function UserPrint({visible, confirmAction, cancelAction, data}) 
                         borderBottomStyle:"solid"}}>
                 <th width={200} align="left">Code</th>
                 <th align="left">Name</th>
-                <th width={65}>Read</th>
-                <th width={65}>Add</th>
-                <th width={65}>Edit</th>
-                <th width={65}>Delete</th>
-                <th width={65}>Print</th>
+                <th width={100}>Enabled</th>
             </thead>
             <tbody>
                 {
-                    data?.modules?.map(row=>{
+                    data?.roles?.map(row=>{
                         return(
                             <tr>
-                                <td align="left">{row.moduleCode}</td>
-                                <td align="left">{row.moduleName}</td>
-                                <td align="center">{row.read?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}</td>
-                                <td align="center">{row.add?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}</td>
-                                <td align="center">{row.edit?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}</td>
-                                <td align="center">{row.delete?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}</td>
-                                <td align="center">{row.print?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:""}</td>
+                                <td align="left">{row.roleCode}</td>
+                                <td align="left">{row.roleName}</td>
+                                <td align="center">{row.enabled?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"}</td>
                             </tr>
                         )
                     })

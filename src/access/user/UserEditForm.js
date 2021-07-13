@@ -7,13 +7,15 @@ import {
     Form,
     Input,
     Checkbox,
-    Table
+    Table,
+    Button
 } from 'antd';
 
 import { 
     BuildOutlined,
-    BlockOutlined,
+    UserOutlined,
 } from '@ant-design/icons';
+
 import DataToolbar from '../../component/DataToolbar';
 import UserPrint from './UserPrint';
 
@@ -22,45 +24,20 @@ export default function UserEditForm({token}) {
   const navigation = useHistory();
   const location = useLocation();
   const [form] = Form.useForm();
-  const [visible, setVisible] = React.useState(false);
-  const [code, setCode] = React.useState(location?.state?.rowData?.code);
+  const [email, setEmail] = React.useState(location?.state?.rowData?.email);
   const [name, setName] = React.useState(location?.state?.rowData?.name);
-  const [note, setNote] = React.useState(location?.state?.rowData?.note);
+  const [locked, setLocked] = React.useState(location?.state?.rowData?.locked);
   const [enabled, setEnabled] = React.useState(location?.state?.rowData?.enabled);
-  const [modules, setModules] = React.useState([]);
-
-  const roleMods = async () => {
-
-    if(location?.state?.rowData?.modules) {
-      
-      let objs = [];
-      location.state.rowData.modules.map(row=>{
-        objs.push({
-          moduleCode:row.moduleCode,
-          moduleName:row.moduleName,
-          moduleGroup:row.moduleGroup,
-          read:row.read,
-          add:row.add,
-          edit:row.edit,
-          delete:row.delete,
-          print:row.print
-        })
-      });
-
-      objs.sort();
-      setModules(objs)
-    }
-  }
-
-  React.useEffect(()=>{roleMods()},[])
+  const [roles, setRoles] = React.useState(location?.state?.rowData?.roles);
+  const [visible, setVisible] = React.useState(false);
 
   const create = async () => {
 
     try {
+      console.log(roles);
 
-      if(code && name) {
-
-        let response = await fetch('https://127.0.0.1:8585/roles/update', {
+      if(email && name) {
+        let response = await fetch('https://127.0.0.1:8585/users/update', {
           method: 'PUT',
           headers: {
             Accept: 'application/json', 
@@ -68,23 +45,23 @@ export default function UserEditForm({token}) {
             Authorization: 'Bearer '+token,
           },
           body:JSON.stringify({
-            'code':code,
+            'email':email,
             'name':name,
-            'note':note,
             'enabled':enabled,
-            'modules':modules
+            'locked':locked,
+            'roles':roles
           })
         });
 
         let json = await response.json();
         if(json.status) {
-          navigation.push("/access/role/list");
+          navigation.push("/access/user/list");
         }
       }
       else {
         notification.error({
           message:"Error", 
-          description:"code, name or group field cannot be empty."
+          description:"email/name field cannot be empty."
         });
       }     
     } 
@@ -98,13 +75,9 @@ export default function UserEditForm({token}) {
   }
 
   const column = [
-    {title:"Code", dataIndex:"moduleCode", key:"Code", width:200},
-    {title:"Name", dataIndex:"moduleName", key:"Name"},
-    {title:"Read", dataIndex:"", key:"read", width:65, render:(text, row)=><Checkbox defaultChecked={modules.find(md=>md.moduleCode===row.moduleCode)?.read} onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).read=e.target.checked}/>},
-    {title:"Add", dataIndex:"", key:"add", width:65, render:(text, row)=><Checkbox defaultChecked={modules.find(md=>md.moduleCode===row.moduleCode)?.add} onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).add=e.target.checked}/>},
-    {title:"Edit", dataIndex:"", key:"edit", width:65, render:(text, row)=><Checkbox defaultChecked={modules.find(md=>md.moduleCode===row.moduleCode)?.edit} onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).edit=e.target.checked}/>},
-    {title:"Delete", dataIndex:"", key:"delete", width:65, render:(text, row)=><Checkbox defaultChecked={modules.find(md=>md.moduleCode===row.moduleCode)?.delete} onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).delete=e.target.checked}/>},
-    {title:"Print", dataIndex:"", key:"print", width:65, render:(text, row)=><Checkbox defaultChecked={modules.find(md=>md.moduleCode===row.moduleCode)?.print} onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).print=e.target.checked}/>}
+    {title:"Code", dataIndex:"roleCode", key:"Code", width:200},
+    {title:"Name", dataIndex:"roleName", key:"Name"},
+    {title:"Enabled", dataIndex:"enabled", key:"enabled", width:100, render:(text, row)=><Checkbox defaultChecked={row.enabled} onChange={(e)=>roles.find(md=>md.roleCode===row.roleCode).enabled=e.target.checked}/>},
   ]
 
   return (
@@ -115,19 +88,19 @@ export default function UserEditForm({token}) {
                 <BuildOutlined/> Access
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <BlockOutlined/> Role
+                <UserOutlined/> User
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 Edit
               </Breadcrumb.Item>
             </Breadcrumb>
             <DataToolbar saveAction={create}
-                        cancelAction={()=>navigation.push("/access/role/list")}
+                        cancelAction={()=>navigation.push("/access/user/list")}
                         printAction={()=>setVisible(true)}/>
 
             <div style={{
                           width:"99%", 
-                          height:"95%",
+                          height:"88%",
                           backgroundColor:"#FFFFFF", 
                           padding:10,
                           margin:5, 
@@ -138,31 +111,35 @@ export default function UserEditForm({token}) {
                           flexWrap:"wrap",
                           alignContent:"flex-start"}}>
 
-                <Form style={{width:"60%", alignSelf:"flex-start"}} 
+                <Form style={{width:"60%", alignSelf:"flex-start", padding:3}} 
                       labelCol={{span:8}} 
                       wrapperCol={{span:16}} 
-                      form={form}>
+                      form={form}
+                      size="small">
                   
-                  <Form.Item label="Code" name="code" rules={[{ required: true }]}>
-                    <Input defaultValue={code} onChange={(e)=>setCode(e.target.value)}/>
+                  <Form.Item label="Email" name="email" rules={[{ required: true }]}>
+                    <Input defaultValue={email} onChange={(e)=>setEmail(e.target.value)}/>
                   </Form.Item>
                   <Form.Item label="Name" name="name" rules={[{ required: true }]}>
                     <Input defaultValue={name} onChange={(e)=>setName(e.target.value)}/>
                   </Form.Item>
-                  <Form.Item label="Enabled" name="enabled" rules={[{ required: true }]}>
-                    <Checkbox defaultChecked={enabled} onChange={(e)=>setEnabled(e.target.value)}/>
+                  <Form.Item label="Password" name="password">
+                    <Button type="link" onClick={()=>navigation.push("/access/user/add")}>Change Password</Button>
                   </Form.Item>
-                  <Form.Item label="Description" name="note">
-                    <Input defaultValue={note} onChange={(e)=>setNote(e.target.value)}/>
+                  <Form.Item label="Enabled" name="enabled">
+                    <Checkbox defaultChecked={enabled} onChange={(e)=>setEnabled(e.target.checked)}/>
+                  </Form.Item>
+                  <Form.Item label="Locked" name="locked">
+                    <Checkbox defaultChecked={locked} onChange={(e)=>setLocked(e.target.checked)}/>
                   </Form.Item>
                 </Form>
-                <Table dataSource={modules} 
+                <Table dataSource={roles} 
                         columns={column} 
                         style={{width:"100%"}} 
                         size="small"/>
             </div>
         </Layout.Content>
-        <UserPrint visible={visible} data={location?.state?.rowData} cancelAction={()=>setVisible(false)}/>
+        <UserPrint visible={visible} confirmAction={()=>{}} cancelAction={() => setVisible(false)} data={location?.state?.rowData}/>
       </>
   )
 }
