@@ -35,6 +35,8 @@ import UserContent from './access/user/UserContent';
 import UserAddForm from './access/user/UserAddForm';
 import UserEditForm from './access/user/UserEditForm';
 
+import GeographicContent from './global/user/GeographicContent';
+
 export default function ApplicationUI({token, setToken, user}) {
   return (
     <Router>
@@ -85,7 +87,9 @@ export default function ApplicationUI({token, setToken, user}) {
               </Menu.SubMenu>
               <Menu.Divider/>
               <Menu.SubMenu title="Global" icon={<GlobalOutlined/>}>
-                <Menu.Item icon={<CompassFilled/>}>Geographic</Menu.Item>
+                <Menu.Item icon={<CompassFilled/>}>
+                  <Link exact to="/global/geographic/list">Geographic</Link>
+                </Menu.Item>
                 <Menu.Divider/>
                 <Menu.Item icon={<ApartmentOutlined/>}>Company structure</Menu.Item>
               </Menu.SubMenu>
@@ -142,6 +146,9 @@ export default function ApplicationUI({token, setToken, user}) {
               </Route>
               <Route exact path="/access/user/edit">
                 <UserEditForm token={token}/>
+              </Route>
+              <Route exact path="/global/geographic/list">
+                <GeographicContent token={token}/>
               </Route>
             </Switch>
           </Layout>
