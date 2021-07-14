@@ -123,7 +123,7 @@ export default function ModuleEditForm({token}) {
                     </Select>
                   </Form.Item>
                   <Form.Item label="Enabled" name="enabled" rules={[{ required: true }]}>
-                    <Checkbox checked={enabled} onChange={(e)=>setEnabled(e.target.value)}/>
+                    <Checkbox defaultChecked={enabled} onChange={(e)=>setEnabled(e.target.checked)}/>
                   </Form.Item>
                   <Form.Item label="Description" name="note">
                     <Input defaultValue={note}  onChange={(e)=>setNote(e.target.value)}/>

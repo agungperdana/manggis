@@ -35,9 +35,9 @@ import UserContent from './access/user/UserContent';
 import UserAddForm from './access/user/UserAddForm';
 import UserEditForm from './access/user/UserEditForm';
 
-import GeographicContent from './global/user/GeographicContent';
-import GeographicAddForm from './global/user/GeographicAddForm';
-import GeographicEditForm from './global/user/GeographicEditForm';
+import GeographicContent from './global/geographic/GeographicContent';
+import GeographicAddForm from './global/geographic/GeographicAddForm';
+import GeographicEditForm from './global/geographic/GeographicEditForm';
 
 export default function ApplicationUI({token, setToken, user}) {
   return (

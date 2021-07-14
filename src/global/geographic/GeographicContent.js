@@ -71,7 +71,6 @@ export default function GeographicContent({token}) {
       let json = await response.json();
       if(json.status) {
           setData(json.result);
-          console.log(json.result);
       }
     } 
     catch (error) {
@@ -85,11 +84,11 @@ export default function GeographicContent({token}) {
 
   React.useEffect(()=>{loadData()},[]);
 
-  const remove = async (email) => {
+  const remove = async (code) => {
 
     try {
       
-      if(email) {
+      if(code) {
         let response = await fetch('https://127.0.0.1:8585/geographics/delete', {
           method: 'DELETE',
           headers: {
@@ -98,7 +97,7 @@ export default function GeographicContent({token}) {
             Authorization: 'Bearer '+token,
           },
           body: JSON.stringify({
-            'email':email
+            'code':code
           })
         });
 
@@ -122,7 +121,7 @@ export default function GeographicContent({token}) {
     {title:"Name", dataIndex:"name", key:"Name", width:"50%"},
     {title:"Type", dataIndex:"type", key:"type", width:150},
     {title:"", dataIndex:"", key:"Action", width:100, render:(txt, row)=>(
-      <RowToolbar delAction={()=>remove(row.email)} 
+      <RowToolbar delAction={()=>remove(row.code)} 
                 editAction={()=>navigation.push("/global/geographic/edit", {rowData:row})}
                 printAction={()=>{
                   setRow(row);
