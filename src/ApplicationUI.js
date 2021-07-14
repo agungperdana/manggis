@@ -36,6 +36,8 @@ import UserAddForm from './access/user/UserAddForm';
 import UserEditForm from './access/user/UserEditForm';
 
 import GeographicContent from './global/user/GeographicContent';
+import GeographicAddForm from './global/user/GeographicAddForm';
+import GeographicEditForm from './global/user/GeographicEditForm';
 
 export default function ApplicationUI({token, setToken, user}) {
   return (
@@ -116,6 +118,8 @@ export default function ApplicationUI({token, setToken, user}) {
             <Link exact to="/access/role/edit"/>
             <Link exact to="/access/user/add"/>
             <Link exact to="/access/user/edit"/>
+            <Link exact to="/global/geographic/add"/>
+            <Link exact to="/global/geographic/edit"/>
             <Switch>
               <Route exact path="/">
                 <HomeContent/>
@@ -149,6 +153,12 @@ export default function ApplicationUI({token, setToken, user}) {
               </Route>
               <Route exact path="/global/geographic/list">
                 <GeographicContent token={token}/>
+              </Route>
+              <Route exact path="/global/geographic/add">
+                <GeographicAddForm token={token}/>
+              </Route>
+              <Route exact path="/global/geographic/edit">
+                <GeographicEditForm token={token}/>
               </Route>
             </Switch>
           </Layout>

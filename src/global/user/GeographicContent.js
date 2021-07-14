@@ -71,6 +71,7 @@ export default function GeographicContent({token}) {
       let json = await response.json();
       if(json.status) {
           setData(json.result);
+          console.log(json.result);
       }
     } 
     catch (error) {
@@ -117,18 +118,17 @@ export default function GeographicContent({token}) {
   }
 
   const column = [
-    {title:"", dataIndex:"", key:"Action", width:110, render:(txt, row)=>(
-        <RowToolbar delAction={()=>remove(row.email)} 
-                  editAction={()=>navigation.push("/global/geographic/edit", {rowData:row})}
-                  printAction={()=>{
-                    setRow(row);
-                    setVisible(true);
-                  }}/>
-    )},
     {title:"Code", dataIndex:"code", key:"code"},
-    {title:"Name", dataIndex:"name", key:"Name", width:250},
+    {title:"Name", dataIndex:"name", key:"Name", width:"50%"},
     {title:"Type", dataIndex:"type", key:"type", width:150},
-    {title:"Description", dataIndex:"note", key:"Note", width:250},
+    {title:"", dataIndex:"", key:"Action", width:100, render:(txt, row)=>(
+      <RowToolbar delAction={()=>remove(row.email)} 
+                editAction={()=>navigation.push("/global/geographic/edit", {rowData:row})}
+                printAction={()=>{
+                  setRow(row);
+                  setVisible(true);
+                }}/>
+   )},
   ]
 
   return (

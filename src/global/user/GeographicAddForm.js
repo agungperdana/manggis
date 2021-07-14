@@ -6,13 +6,12 @@ import {
     notification,
     Form,
     Input,
-    Checkbox,
-    Table
+    Select
 } from 'antd';
 
 import { 
-    BuildOutlined,
-    UserOutlined,
+    CompassOutlined,
+    GlobalOutlined,
 } from '@ant-design/icons';
 import DataToolbar from '../../component/DataToolbar';
 
@@ -20,18 +19,17 @@ export default function GeographicAddForm({token}) {
 
   const navigation = useHistory();
   const [form] = Form.useForm();
-  const [email, setEmail] = React.useState(null);
+  const [code, setCode] = React.useState(null);
   const [name, setName] = React.useState(null);
-  const [password, setPassword] = React.useState(null);
-  const [rePassword, setRePassword] = React.useState(null);
-  const [locked, setLocked] = React.useState(false);
-  const [enabled, setEnabled] = React.useState(true);
-  const [roles, setRoles] = React.useState([]);
+  const [note, setNote] = React.useState(null);
+  const [type, setType] = React.useState(null);
+  const [parent, setParent] = React.useState(null);
+  const [parents, setParents] = React.useState([]);
 
-  const getRoles = async () => {
+  const getParents = async () => {
     try {
 
-      let response = await fetch('https://127.0.0.1:8585/roles/all-roles/0/1000', {
+      let response = await fetch('https://127.0.0.1:8585/geographics/all-geographics/0/1000', {
           method: 'GET',
           headers: {
             Accept: 'application/json', 
@@ -42,35 +40,20 @@ export default function GeographicAddForm({token}) {
 
         let json = await response.json();
         if(json.status) {
-          
-          let mods = [];
-
-          json.result.map(obj=>{
-
-            if(obj.enabled) {
-              mods.push({
-                roleCode:obj?.code,
-                roleName:obj?.name,
-                enabled:false
-              });
-            }            
-          })
-
-          mods.sort();
-          setRoles(mods);
+          setParents(json.result);          
         }
     } 
     catch (error) {}
   }
 
-  React.useEffect(()=>{getRoles()},[])
+  React.useEffect(()=>{getParents()},[])
 
   const create = async () => {
 
     try {
 
-      if(email && name && password && rePassword && (password === rePassword)) {
-        let response = await fetch('https://127.0.0.1:8585/users/create', {
+      if(code && name && type) {
+        let response = await fetch('https://127.0.0.1:8585/geographics/create', {
           method: 'POST',
           headers: {
             Accept: 'application/json', 
@@ -78,25 +61,23 @@ export default function GeographicAddForm({token}) {
             Authorization: 'Bearer '+token,
           },
           body:JSON.stringify({
-            'email':email,
+            'code':code,
             'name':name,
-            'password':password,
-            'rePassword':rePassword,
-            'enabled':enabled,
-            'locked':locked,
-            'roles':roles
+            'note':note,
+            'type':type,
+            'parent':parent,
           })
         });
 
         let json = await response.json();
         if(json.status) {
-          navigation.push("/access/user/list");
+          navigation.push("/global/geographic/list");
         }
       }
       else {
         notification.error({
           message:"Error", 
-          description:"email/name/password field cannot be empty."
+          description:"code/name/type field cannot be empty."
         });
       }     
     } 
@@ -109,27 +90,21 @@ export default function GeographicAddForm({token}) {
     }
   }
 
-  const column = [
-    {title:"Code", dataIndex:"roleCode", key:"Code", width:200},
-    {title:"Name", dataIndex:"roleName", key:"Name"},
-    {title:"Enabled", dataIndex:"", key:"enabled", width:65, render:(text, row)=><Checkbox onChange={(e)=>roles.find(md=>md.roleCode===row.roleCode).enabled=e.target.checked}/>},
-  ]
-
   return (
         <Layout.Content style={{backgroundColor:"#FFFFFF"}}>
             <Breadcrumb style={{padding:10}}>
               <Breadcrumb.Item>
-                <BuildOutlined/> Access
+                <GlobalOutlined/> Global
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <UserOutlined/> User
+                <CompassOutlined/> Geographic
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 Add new
               </Breadcrumb.Item>
             </Breadcrumb>
             <DataToolbar saveAction={create}
-                        cancelAction={()=>navigation.push("/access/user/list")}
+                        cancelAction={()=>navigation.push("/global/geographic/list")}
                         printAction={()=>{}}/>
 
             <div style={{
@@ -150,29 +125,39 @@ export default function GeographicAddForm({token}) {
                       wrapperCol={{span:16}} 
                       form={form}>
                   
-                  <Form.Item label="Email" name="email" rules={[{ required: true }]}>
-                    <Input onChange={(e)=>setEmail(e.target.value)}/>
+                  <Form.Item label="Code" name="code" rules={[{ required: true }]}>
+                    <Input onChange={(e)=>setCode(e.target.value)}/>
                   </Form.Item>
                   <Form.Item label="Name" name="name" rules={[{ required: true }]}>
                     <Input onChange={(e)=>setName(e.target.value)}/>
                   </Form.Item>
-                  <Form.Item label="Password" name="password" rules={[{ required: true }]}>
-                    <Input.Password onChange={(e)=>setPassword(e.target.value)}/>
+                  <Form.Item label="type" name="type" rules={[{ required: true }]}>
+                    <Select onChange={(txt)=>setType(txt)}>
+                      <Select.Option value="COUNTRY">Negara</Select.Option>
+                      <Select.Option value="PROVINCE">Provinsi</Select.Option>
+                      <Select.Option value="CITY">Kota</Select.Option>
+                      <Select.Option value="REGENCY">Kabupaten</Select.Option>
+                      <Select.Option value="DISTRICT">Kecamatan</Select.Option>
+                      <Select.Option value="SUBDISTRICT">Kelurahan</Select.Option>
+                      <Select.Option value="VILLAGE">Desa</Select.Option>
+                      <Select.Option value="BACKWOODS">Dusun</Select.Option>
+                      <Select.Option value="HAMLET">RW</Select.Option>
+                      <Select.Option value="NEIGHBOURHOOD">RT</Select.Option>
+                    </Select>
                   </Form.Item>
-                  <Form.Item label="Re Type Password" name="rePassword" rules={[{ required: true }]}>
-                    <Input.Password onChange={(e)=>setRePassword(e.target.value)}/>
+                  <Form.Item label="Note" name="note">
+                    <Input onChange={(e)=>setNote(e.target.value)}/>
                   </Form.Item>
-                  <Form.Item label="Enabled" name="enabled" rules={[{ required: true }]}>
-                    <Checkbox checked={enabled} onChange={(e)=>setEnabled(e.target.value)}/>
-                  </Form.Item>
-                  <Form.Item label="Locked" name="locked" rules={[{ required: true }]}>
-                    <Checkbox checked={locked} onChange={(e)=>setLocked(e.target.value)}/>
+                  <Form.Item label="parent" name="parent">
+                    <Select onChange={(txt)=>setParent(txt)}>
+                      {
+                        parents?.map(ob=>{
+                          return (<Select.Option key={ob.code} value={ob.code}>{ob.code+"-"+ob.name}</Select.Option>)
+                        })
+                      }                      
+                    </Select>
                   </Form.Item>
                 </Form>
-                <Table dataSource={roles} 
-                        columns={column} 
-                        style={{width:"100%"}} 
-                        size="small"/>
             </div>
         </Layout.Content>
   )

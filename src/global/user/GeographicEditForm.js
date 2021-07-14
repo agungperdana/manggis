@@ -6,62 +6,83 @@ import {
     notification,
     Form,
     Input,
-    Checkbox,
-    Table,
-    Button
+    Select
 } from 'antd';
 
 import { 
-    BuildOutlined,
-    UserOutlined,
+    CompassOutlined,
+    GlobalOutlined,
 } from '@ant-design/icons';
 
 import DataToolbar from '../../component/DataToolbar';
-import UserPrint from './UserPrint';
+import GeographicPrint from './GeographicPrint';
 
 export default function GeographicEditForm({token}) {
 
   const navigation = useHistory();
   const location = useLocation();
+
   const [form] = Form.useForm();
-  const [email, setEmail] = React.useState(location?.state?.rowData?.email);
+  const [code, setCode] = React.useState(location?.state?.rowData?.code);
   const [name, setName] = React.useState(location?.state?.rowData?.name);
-  const [locked, setLocked] = React.useState(location?.state?.rowData?.locked);
-  const [enabled, setEnabled] = React.useState(location?.state?.rowData?.enabled);
-  const [roles, setRoles] = React.useState(location?.state?.rowData?.roles);
+  const [note, setNote] = React.useState(location?.state?.rowData?.note);
+  const [type, setType] = React.useState(location?.state?.rowData?.type);
+  const [parent, setParent] = React.useState(location?.state?.rowData?.parent);
+  const [parents, setParents] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
+
+  const getParents = async () => {
+    try {
+
+      let response = await fetch('https://127.0.0.1:8585/geographics/all-geographics/0/1000', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json', 
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer '+token,
+          }
+        });
+
+        let json = await response.json();
+        if(json.status) {
+          setParents(json.result);          
+        }
+    } 
+    catch (error) {}
+  }
+
+  React.useEffect(()=>{getParents()},[])
 
   const create = async () => {
 
     try {
-      console.log(roles);
 
-      if(email && name) {
-        let response = await fetch('https://127.0.0.1:8585/users/update', {
-          method: 'PUT',
+      if(code && name && type) {
+        let response = await fetch('https://127.0.0.1:8585/geographics/create', {
+          method: 'POST',
           headers: {
             Accept: 'application/json', 
             'Content-Type': 'application/json',
             Authorization: 'Bearer '+token,
           },
           body:JSON.stringify({
-            'email':email,
+            'code':code,
             'name':name,
-            'enabled':enabled,
-            'locked':locked,
-            'roles':roles
+            'note':note,
+            'type':type,
+            'parent':parent,
           })
         });
 
         let json = await response.json();
         if(json.status) {
-          navigation.push("/access/user/list");
+          navigation.push("/global/geographic/list");
         }
       }
       else {
         notification.error({
           message:"Error", 
-          description:"email/name field cannot be empty."
+          description:"code/name/type field cannot be empty."
         });
       }     
     } 
@@ -74,33 +95,27 @@ export default function GeographicEditForm({token}) {
     }
   }
 
-  const column = [
-    {title:"Code", dataIndex:"roleCode", key:"Code", width:200},
-    {title:"Name", dataIndex:"roleName", key:"Name"},
-    {title:"Enabled", dataIndex:"enabled", key:"enabled", width:100, render:(text, row)=><Checkbox defaultChecked={row.enabled} onChange={(e)=>roles.find(md=>md.roleCode===row.roleCode).enabled=e.target.checked}/>},
-  ]
-
   return (
       <>
         <Layout.Content style={{backgroundColor:"#FFFFFF"}}>
             <Breadcrumb style={{padding:10}}>
               <Breadcrumb.Item>
-                <BuildOutlined/> Access
+                <GlobalOutlined/> Global
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <UserOutlined/> User
+                <CompassOutlined/> Geographic
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 Edit
               </Breadcrumb.Item>
             </Breadcrumb>
             <DataToolbar saveAction={create}
-                        cancelAction={()=>navigation.push("/access/user/list")}
+                        cancelAction={()=>navigation.push("/global/geographic/list")}
                         printAction={()=>setVisible(true)}/>
 
             <div style={{
                           width:"99%", 
-                          height:"88%",
+                          height:"95%",
                           backgroundColor:"#FFFFFF", 
                           padding:10,
                           margin:5, 
@@ -114,32 +129,44 @@ export default function GeographicEditForm({token}) {
                 <Form style={{width:"60%", alignSelf:"flex-start", padding:3}} 
                       labelCol={{span:8}} 
                       wrapperCol={{span:16}} 
-                      form={form}
-                      size="small">
+                      form={form}>
                   
-                  <Form.Item label="Email" name="email" rules={[{ required: true }]}>
-                    <Input defaultValue={email} onChange={(e)=>setEmail(e.target.value)}/>
+                  <Form.Item label="Code" name="code" rules={[{ required: true }]}>
+                    <Input defaultValue={code} onChange={(e)=>setCode(e.target.value)}/>
                   </Form.Item>
                   <Form.Item label="Name" name="name" rules={[{ required: true }]}>
                     <Input defaultValue={name} onChange={(e)=>setName(e.target.value)}/>
                   </Form.Item>
-                  <Form.Item label="Password" name="password">
-                    <Button type="link" onClick={()=>navigation.push("/access/user/add")}>Change Password</Button>
+                  <Form.Item label="type" name="type" rules={[{ required: true }]}>
+                    <Select defaultValue={type} onChange={(txt)=>setType(txt)}>
+                      <Select.Option value="COUNTRY">Negara</Select.Option>
+                      <Select.Option value="PROVINCE">Provinsi</Select.Option>
+                      <Select.Option value="CITY">Kota</Select.Option>
+                      <Select.Option value="REGENCY">Kabupaten</Select.Option>
+                      <Select.Option value="DISTRICT">Kecamatan</Select.Option>
+                      <Select.Option value="SUBDISTRICT">Kelurahan</Select.Option>
+                      <Select.Option value="VILLAGE">Desa</Select.Option>
+                      <Select.Option value="BACKWOODS">Dusun</Select.Option>
+                      <Select.Option value="HAMLET">RW</Select.Option>
+                      <Select.Option value="NEIGHBOURHOOD">RT</Select.Option>
+                    </Select>
                   </Form.Item>
-                  <Form.Item label="Enabled" name="enabled">
-                    <Checkbox defaultChecked={enabled} onChange={(e)=>setEnabled(e.target.checked)}/>
+                  <Form.Item label="Note" name="note">
+                    <Input defaultValue={note} onChange={(e)=>setNote(e.target.value)}/>
                   </Form.Item>
-                  <Form.Item label="Locked" name="locked">
-                    <Checkbox defaultChecked={locked} onChange={(e)=>setLocked(e.target.checked)}/>
+                  <Form.Item label="parent" name="parent">
+                    <Select defaultValue={parent} onChange={(txt)=>setParent(txt)}>
+                      {
+                        parents?.map(ob=>{
+                          return (<Select.Option key={ob.code} value={ob.code}>{ob.code+"-"+ob.name}</Select.Option>)
+                        })
+                      }                      
+                    </Select>
                   </Form.Item>
                 </Form>
-                <Table dataSource={roles} 
-                        columns={column} 
-                        style={{width:"100%"}} 
-                        size="small"/>
             </div>
         </Layout.Content>
-        <UserPrint visible={visible} confirmAction={()=>{}} cancelAction={() => setVisible(false)} data={location?.state?.rowData}/>
+        <GeographicPrint cancelAction={()=>setVisible(false)} visible={visible} data={location?.state?.rowData}/>
       </>
   )
 }

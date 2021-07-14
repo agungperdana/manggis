@@ -118,18 +118,18 @@ export default function UserContent({token}) {
   }
 
   const column = [
-    {title:"", dataIndex:"", key:"Action", width:110, render:(txt, row)=>(
-        <RowToolbar delAction={()=>remove(row.email)} 
-                  editAction={()=>navigation.push("/access/user/edit", {rowData:row})}
-                  printAction={()=>{
-                    setRow(row);
-                    setVisible(true);
-                  }}/>
-    )},
     {title:"Email", dataIndex:"email", key:"email"},
     {title:"Name", dataIndex:"name", key:"Name", width:250},
     {title:"Enabled", dataIndex:"enabled", key:"Enabled", width:100, render:(txt)=>txt?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"},
-    {title:"Locked", dataIndex:"locked", key:"Locked", width:100, render:(txt)=>txt?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"}
+    {title:"Locked", dataIndex:"locked", key:"Locked", width:100, render:(txt)=>txt?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"},
+    {title:"", dataIndex:"", key:"Action", width:110, render:(txt, row)=>(
+      <RowToolbar delAction={()=>remove(row.email)} 
+                editAction={()=>navigation.push("/access/user/edit", {rowData:row})}
+                printAction={()=>{
+                  setRow(row);
+                  setVisible(true);
+                }}/>
+    )},
   ]
 
   return (
