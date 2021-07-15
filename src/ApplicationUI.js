@@ -12,6 +12,7 @@ import {
   NodeCollapseOutlined,
   NodeExpandOutlined,
   ApartmentOutlined,
+  GoldFilled,
 } from '@ant-design/icons';
 import {
   BrowserRouter as Router,
@@ -38,6 +39,8 @@ import UserEditForm from './access/user/UserEditForm';
 import GeographicContent from './global/geographic/GeographicContent';
 import GeographicAddForm from './global/geographic/GeographicAddForm';
 import GeographicEditForm from './global/geographic/GeographicEditForm';
+
+import PartyContent from './global/party/PartyContent';
 
 export default function ApplicationUI({token, setToken, user}) {
   return (
@@ -91,6 +94,10 @@ export default function ApplicationUI({token, setToken, user}) {
               <Menu.SubMenu title="Global" icon={<GlobalOutlined/>}>
                 <Menu.Item icon={<CompassFilled/>}>
                   <Link exact to="/global/geographic/list">Geographic</Link>
+                </Menu.Item>
+                <Menu.Divider/>
+                <Menu.Item icon={<GoldFilled/>}>
+                  <Link exact to="/global/party/list">Party</Link>
                 </Menu.Item>
                 <Menu.Divider/>
                 <Menu.Item icon={<ApartmentOutlined/>}>Company structure</Menu.Item>
@@ -159,6 +166,9 @@ export default function ApplicationUI({token, setToken, user}) {
               </Route>
               <Route exact path="/global/geographic/edit">
                 <GeographicEditForm token={token}/>
+              </Route>
+              <Route exact path="/global/party/list">
+                <PartyContent token={token}/>
               </Route>
             </Switch>
           </Layout>
