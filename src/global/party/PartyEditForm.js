@@ -6,16 +6,27 @@ import {
     notification,
     Form,
     Input,
-    Select
+    Select,
+    DatePicker,
+    Tabs
 } from 'antd';
 
 import { 
-    CompassOutlined,
+  BankFilled,
+  ContactsFilled,
+    ContainerFilled,
     GlobalOutlined,
+    GoldFilled,
+    InfoCircleFilled,
+    InteractionFilled,
+    SlidersFilled,
 } from '@ant-design/icons';
 
+import moment from 'moment';
+
 import DataToolbar from '../../component/DataToolbar';
-import GeographicPrint from './GeographicPrint';
+import PartyPrint from './PartyPrint';
+import PartyClassification from './PartyClassification';
 
 export default function PartyEditForm({token}) {
 
@@ -25,40 +36,45 @@ export default function PartyEditForm({token}) {
   const [form] = Form.useForm();
   const [code, setCode] = React.useState(location?.state?.rowData?.code);
   const [name, setName] = React.useState(location?.state?.rowData?.name);
-  const [note, setNote] = React.useState(location?.state?.rowData?.note);
   const [type, setType] = React.useState(location?.state?.rowData?.type);
-  const [parent, setParent] = React.useState(location?.state?.rowData?.parent);
-  const [parents, setParents] = React.useState([]);
+  const [birthPlace, setBirthPlace] = React.useState(location?.state?.rowData?.birthPlace.code);
+  const [birthDate, setBirthDate] = React.useState(
+                                        location?.state?.rowData?.birthDate?
+                                        new Date(location?.state?.rowData?.birthDate)
+                                        :null);
+  const [gender, setGender] = React.useState(location?.state?.rowData?.gender);
+  const [taxCode, setTaxCode] = React.useState(location?.state?.rowData?.taxCode);
   const [visible, setVisible] = React.useState(false);
+  const [geographics, setGeographics] = React.useState([]);
 
-  const getParents = async () => {
+  const loadGeographic = async () => {
+
     try {
-
       let response = await fetch('https://127.0.0.1:8585/geographics/all-geographics/0/1000', {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json', 
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer '+token,
-          }
-        });
+        method: 'GET',
+        headers: {
+          Accept: 'application/json', 
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer '+token,
+        },
+      });
 
-        let json = await response.json();
-        if(json.status) {
-          setParents(json.result);          
-        }
+      let json = await response.json();
+      if(json.status) {
+        setGeographics(json.result);
+      }
     } 
     catch (error) {}
   }
 
-  React.useEffect(()=>{getParents()},[])
+  React.useEffect(()=>{loadGeographic()}, []);
 
-  const create = async () => {
+  const update = async () => {
 
     try {
 
       if(code && name && type) {
-        let response = await fetch('https://127.0.0.1:8585/geographics/create', {
+        let response = await fetch('https://127.0.0.1:8585/partys/update', {
           method: 'POST',
           headers: {
             Accept: 'application/json', 
@@ -68,15 +84,17 @@ export default function PartyEditForm({token}) {
           body:JSON.stringify({
             'code':code,
             'name':name,
-            'note':note,
             'type':type,
-            'parent':parent,
+            'gender':gender,
+            'birthPlace':birthPlace,
+            'birthDate':birthDate,
+            'taxCode':taxCode
           })
         });
 
         let json = await response.json();
         if(json.status) {
-          navigation.push("/global/geographic/list");
+          navigation.push("/global/party/list");
         }
       }
       else {
@@ -103,70 +121,89 @@ export default function PartyEditForm({token}) {
                 <GlobalOutlined/> Global
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <CompassOutlined/> Geographic
+                <GoldFilled/> Party
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 Edit
               </Breadcrumb.Item>
             </Breadcrumb>
-            <DataToolbar saveAction={create}
-                        cancelAction={()=>navigation.push("/global/geographic/list")}
-                        printAction={()=>setVisible(true)}/>
+            <Tabs type="card" style={{width:"99%", height:"95%", margin:5}}>
+              <Tabs.TabPane tab={<span><InfoCircleFilled/>Info</span>} key="InfoTab">
+                <DataToolbar saveAction={()=>{update()}}
+                          cancelAction={()=>navigation.push("/global/party/list")}
+                          printAction={()=>setVisible(true)}/>
 
-            <div style={{
-                          width:"99%", 
-                          height:"95%",
-                          backgroundColor:"#FFFFFF", 
-                          padding:10,
-                          margin:5, 
-                          borderStyle:"solid",
-                          borderColor:"#BFBFBF",
-                          borderWidth:1,
-                          borderRadius:10,
-                          flexWrap:"wrap",
-                          alignContent:"flex-start"}}>
+                <div style={{
+                              width:"99%", 
+                              height:"90%",
+                              backgroundColor:"#FFFFFF", 
+                              padding:10,
+                              margin:5, 
+                              borderStyle:"solid",
+                              borderColor:"#BFBFBF",
+                              borderWidth:1,
+                              borderRadius:10,
+                              flexWrap:"wrap",
+                              alignContent:"flex-start"}}>
 
-                <Form style={{width:"60%", alignSelf:"flex-start", padding:3}} 
-                      labelCol={{span:8}} 
-                      wrapperCol={{span:16}} 
-                      form={form}>
-                  
-                  <Form.Item label="Code" name="code" rules={[{ required: true }]}>
-                    <Input defaultValue={code} onChange={(e)=>setCode(e.target.value)}/>
-                  </Form.Item>
-                  <Form.Item label="Name" name="name" rules={[{ required: true }]}>
-                    <Input defaultValue={name} onChange={(e)=>setName(e.target.value)}/>
-                  </Form.Item>
-                  <Form.Item label="type" name="type" rules={[{ required: true }]}>
-                    <Select defaultValue={type} onChange={(txt)=>setType(txt)}>
-                      <Select.Option value="COUNTRY">Negara</Select.Option>
-                      <Select.Option value="PROVINCE">Provinsi</Select.Option>
-                      <Select.Option value="CITY">Kota</Select.Option>
-                      <Select.Option value="REGENCY">Kabupaten</Select.Option>
-                      <Select.Option value="DISTRICT">Kecamatan</Select.Option>
-                      <Select.Option value="SUBDISTRICT">Kelurahan</Select.Option>
-                      <Select.Option value="VILLAGE">Desa</Select.Option>
-                      <Select.Option value="BACKWOODS">Dusun</Select.Option>
-                      <Select.Option value="HAMLET">RW</Select.Option>
-                      <Select.Option value="NEIGHBOURHOOD">RT</Select.Option>
-                    </Select>
-                  </Form.Item>
-                  <Form.Item label="Note" name="note">
-                    <Input defaultValue={note} onChange={(e)=>setNote(e.target.value)}/>
-                  </Form.Item>
-                  <Form.Item label="parent" name="parent">
-                    <Select defaultValue={parent} onChange={(txt)=>setParent(txt)}>
+                    <Form style={{width:"60%", alignSelf:"flex-start", padding:3}} 
+                          labelCol={{span:8}} 
+                          wrapperCol={{span:16}} 
+                          form={form}
+                          size="small">
+                      
+                      <Form.Item label="Code" name="code" rules={[{ required: true }]}>
+                        <Input defaultValue={code} onChange={(e)=>setCode(e.target.value)}/>
+                      </Form.Item>
+                      <Form.Item label="Name" name="name" rules={[{ required: true }]}>
+                        <Input defaultValue={name} onChange={(e)=>setName(e.target.value)}/>
+                      </Form.Item>
+                      <Form.Item label="type" name="type" rules={[{ required: true }]}>
+                        <Select defaultValue={type} onChange={(txt)=>setType(txt)}>
+                          <Select.Option value="PERSON">Person</Select.Option>
+                          <Select.Option value="ORGANIZATION">Organization</Select.Option>
+                        </Select>
+                      </Form.Item>
+                      <Form.Item label="taxCode" name="taxCode">
+                        <Input defaultValue={taxCode
+                        } onChange={(e)=>setTaxCode(e.target.value)}/>
+                      </Form.Item>
+                      <Form.Item label="birthPlace" name="birthPlace" rules={[{ required: true }]}>
+                        <Select defaultValue={birthPlace} onChange={(txt)=>setBirthPlace(txt)}>
+                          {
+                            geographics.map(geo=>{
+                              return (<Select.Option value={geo.code}>{geo.name}</Select.Option>)
+                            })
+                          }
+                          
+                        </Select>
+                      </Form.Item>
+                      <Form.Item label="birthDate" name="birthDate">
+                        <DatePicker defaultValue={birthDate?moment(birthDate, 'YYYY-MM-DD'):null} format="YYYY-MM-DD" onChange={(mom, txt)=>setBirthDate(txt)}/>
+                      </Form.Item>
                       {
-                        parents?.map(ob=>{
-                          return (<Select.Option key={ob.code} value={ob.code}>{ob.code+"-"+ob.name}</Select.Option>)
-                        })
-                      }                      
-                    </Select>
-                  </Form.Item>
-                </Form>
-            </div>
+                        (type && type==='PERSON')?
+                        <Form.Item label="gender" name="gender">
+                          <Select defaultValue={gender} onChange={(txt)=>setGender(txt)}>
+                            <Select.Option value="MALE">Male</Select.Option>
+                            <Select.Option value="FEMALE">Female</Select.Option>
+                          </Select>
+                        </Form.Item>
+                        :<></>
+                      }
+                    </Form>
+                </div>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab={<span><BankFilled/>Classification</span>} key="ClassificationTab">
+                <PartyClassification token={token} partyCode={code}/>
+              </Tabs.TabPane>
+              <Tabs.TabPane tab={<span><ContactsFilled/>Contact</span>} key="ContactTab"></Tabs.TabPane>
+              <Tabs.TabPane tab={<span><ContainerFilled/>Address</span>} key="AddressTab"></Tabs.TabPane>
+              <Tabs.TabPane tab={<span><SlidersFilled/>Role</span>} key="RoleTab"></Tabs.TabPane>
+              <Tabs.TabPane tab={<span><InteractionFilled/>Relationship</span>} key="RelationshipTab"></Tabs.TabPane>
+            </Tabs>
         </Layout.Content>
-        <GeographicPrint cancelAction={()=>setVisible(false)} visible={visible} data={location?.state?.rowData}/>
+        <PartyPrint cancelAction={()=>setVisible(false)} visible={visible} data={location?.state?.rowData}/>
       </>
   )
 }

@@ -6,13 +6,15 @@ import {
     notification,
     Form,
     Input,
-    Select
+    Select,
+    DatePicker
 } from 'antd';
 
 import { 
-    CompassOutlined,
     GlobalOutlined,
+    GoldFilled,
 } from '@ant-design/icons';
+
 import DataToolbar from '../../component/DataToolbar';
 
 export default function PartyAddForm({token}) {
@@ -21,39 +23,41 @@ export default function PartyAddForm({token}) {
   const [form] = Form.useForm();
   const [code, setCode] = React.useState(null);
   const [name, setName] = React.useState(null);
-  const [note, setNote] = React.useState(null);
   const [type, setType] = React.useState(null);
-  const [parent, setParent] = React.useState(null);
-  const [parents, setParents] = React.useState([]);
+  const [gender, setGender] = React.useState(null);
+  const [birthDate, setBirthDate] = React.useState(null);
+  const [taxCode, setTaxCode] = React.useState(null);
+  const [geographics, setGeographics] = React.useState([]);
+  const [birthPlace, setBirthPlace] = React.useState(null);
 
-  const getParents = async () => {
+  const loadGeographic = async () => {
+
     try {
-
       let response = await fetch('https://127.0.0.1:8585/geographics/all-geographics/0/1000', {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json', 
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer '+token,
-          }
-        });
+        method: 'GET',
+        headers: {
+          Accept: 'application/json', 
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer '+token,
+        },
+      });
 
-        let json = await response.json();
-        if(json.status) {
-          setParents(json.result);          
-        }
+      let json = await response.json();
+      if(json.status) {
+        setGeographics(json.result);
+      }
     } 
     catch (error) {}
   }
 
-  React.useEffect(()=>{getParents()},[])
+  React.useEffect(()=>{loadGeographic()}, []);
 
   const create = async () => {
 
     try {
 
       if(code && name && type) {
-        let response = await fetch('https://127.0.0.1:8585/geographics/create', {
+        let response = await fetch('https://127.0.0.1:8585/partys/create', {
           method: 'POST',
           headers: {
             Accept: 'application/json', 
@@ -63,15 +67,17 @@ export default function PartyAddForm({token}) {
           body:JSON.stringify({
             'code':code,
             'name':name,
-            'note':note,
             'type':type,
-            'parent':parent,
+            'gender':gender,
+            'birthPlace':birthPlace,
+            'birthDate':birthDate,
+            'taxCode':taxCode
           })
         });
 
         let json = await response.json();
         if(json.status) {
-          navigation.push("/global/geographic/list");
+          navigation.push("/global/party/list");
         }
       }
       else {
@@ -97,14 +103,14 @@ export default function PartyAddForm({token}) {
                 <GlobalOutlined/> Global
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <CompassOutlined/> Geographic
+                <GoldFilled/> Party
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 Add new
               </Breadcrumb.Item>
             </Breadcrumb>
             <DataToolbar saveAction={create}
-                        cancelAction={()=>navigation.push("/global/geographic/list")}
+                        cancelAction={()=>navigation.push("/global/party/list")}
                         printAction={()=>{}}/>
 
             <div style={{
@@ -133,30 +139,36 @@ export default function PartyAddForm({token}) {
                   </Form.Item>
                   <Form.Item label="type" name="type" rules={[{ required: true }]}>
                     <Select onChange={(txt)=>setType(txt)}>
-                      <Select.Option value="COUNTRY">Negara</Select.Option>
-                      <Select.Option value="PROVINCE">Provinsi</Select.Option>
-                      <Select.Option value="CITY">Kota</Select.Option>
-                      <Select.Option value="REGENCY">Kabupaten</Select.Option>
-                      <Select.Option value="DISTRICT">Kecamatan</Select.Option>
-                      <Select.Option value="SUBDISTRICT">Kelurahan</Select.Option>
-                      <Select.Option value="VILLAGE">Desa</Select.Option>
-                      <Select.Option value="BACKWOODS">Dusun</Select.Option>
-                      <Select.Option value="HAMLET">RW</Select.Option>
-                      <Select.Option value="NEIGHBOURHOOD">RT</Select.Option>
+                      <Select.Option value="PERSON">Person</Select.Option>
+                      <Select.Option value="ORGANIZATION">Organization</Select.Option>
                     </Select>
                   </Form.Item>
-                  <Form.Item label="Note" name="note">
-                    <Input onChange={(e)=>setNote(e.target.value)}/>
+                  <Form.Item label="taxCode" name="taxCode">
+                    <Input onChange={(e)=>setTaxCode(e.target.value)}/>
                   </Form.Item>
-                  <Form.Item label="parent" name="parent">
-                    <Select onChange={(txt)=>setParent(txt)}>
+                  <Form.Item label="birthPlace" name="birthPlace" rules={[{ required: true }]}>
+                    <Select onChange={(txt)=>setBirthPlace(txt)}>
                       {
-                        parents?.map(ob=>{
-                          return (<Select.Option key={ob.code} value={ob.code}>{ob.code+"-"+ob.name}</Select.Option>)
+                        geographics.map(geo=>{
+                          return (<Select.Option value={geo.code}>{geo.name}</Select.Option>)
                         })
-                      }                      
+                      }
+                      
                     </Select>
                   </Form.Item>
+                  <Form.Item label="birthDate" name="birthDate">
+                    <DatePicker format="YYYY-MM-DD" onChange={(mom, txt)=>setBirthDate(txt)}/>
+                  </Form.Item>
+                  {
+                    (type && type==='PERSON')?
+                    <Form.Item label="gender" name="gender">
+                      <Select onChange={(txt)=>setGender(txt)}>
+                        <Select.Option value="MALE">Male</Select.Option>
+                        <Select.Option value="FEMALE">Female</Select.Option>
+                      </Select>
+                    </Form.Item>
+                    :<></>
+                  }
                 </Form>
             </div>
         </Layout.Content>

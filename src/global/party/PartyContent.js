@@ -34,7 +34,7 @@ export default function PartyContent({token}) {
     if(searchKey) {
  
       try {
-        let response = await fetch('https://127.0.0.1:8585/partys/filter/0/1000/'+searchKey, {
+        let response = await fetch('https://127.0.0.1:8585/partys/all-partys/0/1000/'+searchKey, {
             method: 'GET',
             headers: {
               Accept: 'application/json', 
@@ -119,9 +119,10 @@ export default function PartyContent({token}) {
   }
 
   const column = [
-    {title:"Code", dataIndex:"code", key:"code"},
-    {title:"Name", dataIndex:"name", key:"Name", width:"50%"},
+    {title:"Code", dataIndex:"code", key:"code", width:125},
+    {title:"Name", dataIndex:"name", key:"Name"},
     {title:"Type", dataIndex:"type", key:"type", width:150},
+    {title:"Location", dataIndex:"birthPlace", key:"birthPlace", width:200,  render:(txt, row)=>(row.birthPlace.name)},
     {title:"Tax Number", dataIndex:"taxCode", key:"taxCode", width:150},
     {title:"", dataIndex:"", key:"Action", width:100, render:(txt, row)=>(
       <RowToolbar delAction={()=>remove(row.code)} 

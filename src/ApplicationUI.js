@@ -41,6 +41,8 @@ import GeographicAddForm from './global/geographic/GeographicAddForm';
 import GeographicEditForm from './global/geographic/GeographicEditForm';
 
 import PartyContent from './global/party/PartyContent';
+import PartyAddForm from './global/party/PartyAddForm';
+import PartyEditForm from './global/party/PartyEditForm';
 
 export default function ApplicationUI({token, setToken, user}) {
   return (
@@ -127,6 +129,8 @@ export default function ApplicationUI({token, setToken, user}) {
             <Link exact to="/access/user/edit"/>
             <Link exact to="/global/geographic/add"/>
             <Link exact to="/global/geographic/edit"/>
+            <Link exact to="/global/party/add"/>
+            <Link exact to="/global/party/edit"/>
             <Switch>
               <Route exact path="/">
                 <HomeContent/>
@@ -169,6 +173,12 @@ export default function ApplicationUI({token, setToken, user}) {
               </Route>
               <Route exact path="/global/party/list">
                 <PartyContent token={token}/>
+              </Route>
+              <Route exact path="/global/party/add">
+                <PartyAddForm token={token}/>
+              </Route>
+              <Route exact path="/global/party/edit">
+                <PartyEditForm token={token}/>
               </Route>
             </Switch>
           </Layout>
