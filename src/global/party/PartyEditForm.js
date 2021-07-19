@@ -26,7 +26,8 @@ import moment from 'moment';
 
 import DataToolbar from '../../component/DataToolbar';
 import PartyPrint from './PartyPrint';
-import PartyClassification from './PartyClassification';
+
+import PartyClassification from './classification/PartyClassification';
 
 export default function PartyEditForm({token}) {
 
@@ -175,7 +176,6 @@ export default function PartyEditForm({token}) {
                               return (<Select.Option value={geo.code}>{geo.name}</Select.Option>)
                             })
                           }
-                          
                         </Select>
                       </Form.Item>
                       <Form.Item label="birthDate" name="birthDate">
