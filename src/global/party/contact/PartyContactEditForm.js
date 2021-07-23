@@ -22,9 +22,9 @@ import {
 import moment from 'moment';
 
 import DataToolbar from '../../../component/DataToolbar';
-import PartyClassificationPrint from './PartyClassificationPrint';
+import PartyClassificationPrint from './PartyContactPrint';
 
-export default function PartyClassificationEditForm({token, partyCode}) {
+export default function PartyContactEditForm({token, partyCode}) {
 
   const navigation = useHistory();
   const location = useLocation();

@@ -6,14 +6,16 @@ import {
     notification
 } from 'antd';
 
-import moment from 'moment';
+import { 
+    CheckCircleTwoTone 
+} from '@ant-design/icons';
+
 import RowToolbar from '../../../component/RowToolbar';
 import TableTopBar from '../../../component/TableTopBar';
-import PartyClassificationPrint from './PartyClassificationPrint';
-import PartyClassificationAddForm from './PartyClassificationAddForm';
-import PartyClassificationEditForm from './PartyClassificationEditForm';
 
-export default function PartyClassification({token, partyCode}) {
+import PartyContactPrint from './PartyContactPrint';
+
+export default function PartyContact({token, partyCode}) {
 
     const navigation = useHistory();
 
@@ -44,7 +46,7 @@ export default function PartyClassification({token, partyCode}) {
     
           let json = await response.json();
           if(json.status) {
-              setData(json.result?.partyClassifications);
+              setData(json.result?.contacts);
           }
         } 
         catch (error) {
@@ -58,11 +60,12 @@ export default function PartyClassification({token, partyCode}) {
 
     const remove = async (id) => {
 
+        console.log(id);
         try {
 
             if(id) {
                 
-                let response = await fetch('https://127.0.0.1:8585/partys/classifications/delete', {
+                let response = await fetch('https://127.0.0.1:8585/partys/contacts/delete', {
                     method: 'DELETE',
                     headers: {
                         Accept: 'application/json', 
@@ -71,7 +74,7 @@ export default function PartyClassification({token, partyCode}) {
                     },
                     body:JSON.stringify({
                         partyCode:partyCode,
-                        partyClassificationId:id
+                        contactId:id
                     })
                 });
             
@@ -93,18 +96,14 @@ export default function PartyClassification({token, partyCode}) {
     React.useEffect(()=>{loadData()},[]);
 
     const column = [
-        {title:"Start", dataIndex:"start", key:"start", width:130, render:(txt, row)=>(
-            row.start?moment(new Date(row.start)).format("DD-MM-YYYY"):"---"
-        )},
-        {title:"End", dataIndex:"end", key:"end", width:130, render:(txt, row)=>(
-            row.end?moment(new Date(row.end)).format("DD-MM-YYYY"):"---"
-        )},
-        {title:"Value", dataIndex:"value", key:"value"},
-        {title:"Type", dataIndex:"type", key:"type", width:200},
+        {title:"Contact", dataIndex:"contact", key:"contact"},
+        {title:"Type", dataIndex:"type", key:"type", width:300},
+        {title:"Active", dataIndex:"active", key:"active", width:100, 
+            render:(txt, row)=>(row.active?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---")},
         {title:"", dataIndex:"", key:"Action", width:100, render:(txt, row, index)=>(
             <RowToolbar delAction={()=>{remove(row.id)}} 
                         editAction={()=> {
-                            navigation.push("/global/party/edit/classification/edit/",{data:row});
+                            navigation.push("/global/party/edit/contact/edit/",{data:row});
                         }}
                         printAction={()=>{
                             setRow(row);
@@ -116,7 +115,7 @@ export default function PartyClassification({token, partyCode}) {
     return (
         <>
             <TableTopBar addDocAction={()=>{
-                            navigation.push("/global/party/edit/classification/add/");
+                            navigation.push("/global/party/edit/contact/add");
                          }}
                          serachDocAction={setOpenSearch} 
                          reloadAction={()=>loadData()}/>
@@ -134,7 +133,7 @@ export default function PartyClassification({token, partyCode}) {
                 
                 <Table dataSource={data} columns={column} style={{width:"100%"}} size="small"/>
             </div>
-            <PartyClassificationPrint visible={visible} data={row} cancelAction={()=>setVisible(false)} confirmAction={()=>setVisible(false)}/>
+            <PartyContactPrint visible={visible} data={row} cancelAction={()=>setVisible(false)} confirmAction={()=>setVisible(false)}/>
         </>
     );
 }

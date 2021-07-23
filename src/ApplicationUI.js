@@ -130,7 +130,7 @@ export default function ApplicationUI({token, setToken, user}) {
             <Link exact to="/global/geographic/add"/>
             <Link exact to="/global/geographic/edit"/>
             <Link exact to="/global/party/add"/>
-            <Link exact to="/global/party/edit"/>
+            <Link to="/global/party/edit"/>
             <Switch>
               <Route exact path="/">
                 <HomeContent/>
@@ -177,7 +177,7 @@ export default function ApplicationUI({token, setToken, user}) {
               <Route exact path="/global/party/add">
                 <PartyAddForm token={token}/>
               </Route>
-              <Route exact path="/global/party/edit">
+              <Route path="/global/party/edit">
                 <PartyEditForm token={token}/>
               </Route>
             </Switch>

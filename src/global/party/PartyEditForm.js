@@ -1,5 +1,11 @@
 import React from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { 
+  useHistory, 
+  useLocation,
+  Switch,
+  Route,
+  useRouteMatch
+} from 'react-router-dom';
 import { 
     Layout,
     Breadcrumb,
@@ -28,11 +34,18 @@ import DataToolbar from '../../component/DataToolbar';
 import PartyPrint from './PartyPrint';
 
 import PartyClassification from './classification/PartyClassification';
+import PartyClassificationAddForm from './classification/PartyClassificationAddForm';
+import PartyClassificationEditForm from './classification/PartyClassificationEditForm';
+
+import PartyContact from './contact/PartyContact';
+import PartyContactAddForm from './contact/PartyContactAddForm';
+import PartyContactEditForm from './contact/PartyContactEditForm';
 
 export default function PartyEditForm({token}) {
 
   const navigation = useHistory();
   const location = useLocation();
+  const {url, path} = useRouteMatch();
 
   const [form] = Form.useForm();
   const [code, setCode] = React.useState(location?.state?.rowData?.code);
@@ -128,7 +141,7 @@ export default function PartyEditForm({token}) {
                 Edit
               </Breadcrumb.Item>
             </Breadcrumb>
-            <Tabs type="card" style={{width:"99%", height:"95%", margin:5}}>
+            <Tabs type="card" onTabClick={(key)=>navigation.push("/global/party/edit/"+key)} style={{width:"99%", height:"95%", margin:5}}>
               <Tabs.TabPane tab={<span><InfoCircleFilled/>Info</span>} key="InfoTab">
                 <DataToolbar saveAction={()=>{update()}}
                           cancelAction={()=>navigation.push("/global/party/list")}
@@ -136,7 +149,7 @@ export default function PartyEditForm({token}) {
 
                 <div style={{
                               width:"99%", 
-                              height:"90%",
+                              height:"88%",
                               backgroundColor:"#FFFFFF", 
                               padding:10,
                               margin:5, 
@@ -194,10 +207,32 @@ export default function PartyEditForm({token}) {
                     </Form>
                 </div>
               </Tabs.TabPane>
-              <Tabs.TabPane tab={<span><BankFilled/>Classification</span>} key="ClassificationTab">
-                <PartyClassification token={token} partyCode={code}/>
+              <Tabs.TabPane tab={<span><BankFilled/>Classification</span>} key="classification">
+                <Switch>
+                  <Route exact path="/global/party/edit/classification">
+                    <PartyClassification token={token} partyCode={code}/>
+                  </Route>
+                  <Route exact path="/global/party/edit/classification/add">
+                    <PartyClassificationAddForm token={token} partyCode={code}/>
+                  </Route>
+                  <Route exact path="/global/party/edit/classification/edit">
+                    <PartyClassificationEditForm token={token} partyCode={code}/>
+                  </Route>
+                </Switch>
               </Tabs.TabPane>
-              <Tabs.TabPane tab={<span><ContactsFilled/>Contact</span>} key="ContactTab"></Tabs.TabPane>
+              <Tabs.TabPane tab={<span><ContactsFilled/>Contact</span>} key="contact">
+                <Switch>
+                  <Route exact path="/global/party/edit/contact">
+                    <PartyContact token={token} partyCode={code}/>
+                  </Route>
+                  <Route exact path="/global/party/edit/contact/add">
+                    <PartyContactAddForm token={token} partyCode={code}/>
+                  </Route>
+                  <Route exact path="/global/party/edit/contact/edit">
+                    <PartyContactEditForm token={token} partyCode={code}/>
+                  </Route>
+                </Switch>
+              </Tabs.TabPane>
               <Tabs.TabPane tab={<span><ContainerFilled/>Address</span>} key="AddressTab"></Tabs.TabPane>
               <Tabs.TabPane tab={<span><SlidersFilled/>Role</span>} key="RoleTab"></Tabs.TabPane>
               <Tabs.TabPane tab={<span><InteractionFilled/>Relationship</span>} key="RelationshipTab"></Tabs.TabPane>

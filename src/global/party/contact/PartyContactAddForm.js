@@ -7,11 +7,11 @@ import {
     Form,
     Input,
     Select,
-    DatePicker
+    Checkbox
 } from 'antd';
 
 import { 
-    BankFilled,
+    ContactsFilled,
     GlobalOutlined,
     GoldFilled,
 } from '@ant-design/icons';
@@ -20,12 +20,11 @@ import moment from 'moment';
 
 import DataToolbar from '../../../component/DataToolbar';
 
-export default function PartyClassificationAddForm({token, partyCode}) {
+export default function PartyContactAddForm({token, partyCode}) {
 
   const navigation = useHistory();
   const [form] = Form.useForm();
-  const [start, setStart] = React.useState(moment().format("YYYY-MM-DD"));
-  const [end, setEnd] = React.useState(null);
+  const [enabled, setEnabled] = React.useState(false);
   const [type, setType] = React.useState(null);
   const [value, setValue] = React.useState(null);
 
@@ -33,8 +32,8 @@ export default function PartyClassificationAddForm({token, partyCode}) {
 
     try {
 
-      if(start && type && value && token && partyCode) {
-        let response = await fetch('https://127.0.0.1:8585/partys/classifications/create', {
+      if(value && type && token && partyCode) {
+        let response = await fetch('https://127.0.0.1:8585/partys/contacts/create', {
           method: 'POST',
           headers: {
             Accept: 'application/json', 
@@ -43,16 +42,15 @@ export default function PartyClassificationAddForm({token, partyCode}) {
           },
           body:JSON.stringify({
             partyCode:partyCode,
-            start:start,
-            end:end,
+            active:enabled,
             type:type,
-            value:value
+            contact:value
           })
         });
 
         let json = await response.json();
         if(json.status) {
-          navigation.push("/global/party/edit/classification");
+          navigation.push("/global/party/edit/contact");
         }
       }
       else {
@@ -81,14 +79,14 @@ export default function PartyClassificationAddForm({token, partyCode}) {
                 <GoldFilled/> Party
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <BankFilled/> Classification
+                <ContactsFilled/> Contact
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 Add New
               </Breadcrumb.Item>
             </Breadcrumb>
             <DataToolbar saveAction={create}
-                        cancelAction={()=>navigation.push("/global/party/edit/classification")}
+                        cancelAction={()=>navigation.push("/global/party/edit/contact")}
                         printAction={()=>{}}/>
 
             <div style={{
@@ -107,26 +105,24 @@ export default function PartyClassificationAddForm({token, partyCode}) {
                 <Form style={{width:"60%", alignSelf:"flex-start", padding:3}} 
                       labelCol={{span:8}} 
                       wrapperCol={{span:16}} 
-                      form={form}>
+                      form={form}
+                      size="small">
                   
-                  <Form.Item label="Sart Date" name="start" rules={[{ required: true }]}>
-                    <DatePicker name="start"
-                        onChange={(dt, txt)=>setStart(moment(dt).format("YYYY-MM-DD"))} 
-                        defaultValue={moment()} format="DD-MM-YYYY"/>
-                    </Form.Item>
-                    <Form.Item label="End Date" name="end">
-                        <DatePicker name="end" format="DD-MM-YYYY" 
-                                    onChange={(dt, txt)=>setEnd(txt)}/>
-                    </Form.Item>
                     <Form.Item label="Type" name="type" rules={[{ required: true }]}>
                         <Select name="type" onChange={(txt)=>setType(txt)}>
-                            <Select.Option value="INDUSTRY_CLASSIFICATION">Industry Classification</Select.Option>
-                            <Select.Option value="SIZE_CLASSIFICATION">Size Classification</Select.Option>
-                            <Select.Option value="INCOME_CLASSIFICATIONS">Income Classification</Select.Option>
+                            <Select.Option value="CELL_PHONE">Cell Phone</Select.Option>
+                            <Select.Option value="HOME_PHONE">Home Phone</Select.Option>
+                            <Select.Option value="OFFICE_PHONE">Office Phone</Select.Option>
+                            <Select.Option value="PAGER">Pager</Select.Option>
+                            <Select.Option value="EMAIL">Email</Select.Option>
+                            <Select.Option value="POSTBOX">Post Box</Select.Option>
                         </Select>
                     </Form.Item>
                     <Form.Item label="Value" name="valueText" rules={[{ required: true }]}>
                         <Input name="valueTxt" onChange={(e)=>setValue(e.target.value)}/>
+                    </Form.Item>
+                    <Form.Item label="enabled" name="enabled">
+                        <Checkbox onChange={(e)=>setEnabled(e.target.checked)}/>
                     </Form.Item>
                 </Form>
             </div>
