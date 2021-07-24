@@ -1,9 +1,9 @@
 import React from 'react';
 import { 
-    Modal,
+    Modal
 } from 'antd';
 
-import moment from 'moment';
+import { CheckCircleTwoTone } from '@ant-design/icons';
 
 export default function PartyContactPrint({visible, confirmAction, cancelAction, data}) {
 
@@ -12,25 +12,21 @@ export default function PartyContactPrint({visible, confirmAction, cancelAction,
             <table className="cont" style={{border:"none", width:"70%"}}>
             <tbody>
                 <tr>
-                    <td align="left" width={100}>Start</td>
+                    <td align="left" width={100}>Contact</td>
                     <td width={10}>:</td>
-                    <td align="left">{data?.start?moment(data.start).format('DD-MM-YYYY'):"---"}</td>
-                </tr>
-                <tr>
-                    <td align="left">End</td>
-                    <td>:</td>
-                    <td align="left">{data?.end?moment(data.end).format('DD-MM-YYYY'):"---"}</td>
-                </tr>
-                <tr>
-                    <td align="left">Value</td>
-                    <td>:</td>
-                    <td align="left">{data?.value}</td>
+                    <td align="left">{data.contact}</td>
                 </tr>
                 <tr>
                     <td align="left">Type</td>
                     <td>:</td>
                     <td align="left">{data?.type}</td>
                 </tr>
+                <tr>
+                    <td align="left">Active</td>
+                    <td>:</td>
+                    <td align="left">{data?.active?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"}</td>
+                </tr>
+
             </tbody>
             </table>
         </Modal>

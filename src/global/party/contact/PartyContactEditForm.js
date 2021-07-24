@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
-    useHistory,
-    useLocation 
+  useHistory, 
+  useLocation 
 } from 'react-router-dom';
 import { 
     Layout,
@@ -10,38 +10,35 @@ import {
     Form,
     Input,
     Select,
-    DatePicker
+    Checkbox
 } from 'antd';
 
 import { 
-    BankFilled,
+    ContactsFilled,
     GlobalOutlined,
     GoldFilled,
 } from '@ant-design/icons';
 
-import moment from 'moment';
-
 import DataToolbar from '../../../component/DataToolbar';
-import PartyClassificationPrint from './PartyContactPrint';
+import PartyContactPrint from './PartyContactPrint';
 
 export default function PartyContactEditForm({token, partyCode}) {
 
   const navigation = useHistory();
   const location = useLocation();
-
+  
   const [form] = Form.useForm();
-  const [start, setStart] = React.useState(location?.state?.data?.start?moment(location.state.data.start):null);
-  const [end, setEnd] = React.useState(location?.state?.data?.end?moment(location.state.data.end):null);
+  const [enabled, setEnabled] = React.useState(location?.state?.data?.active);
   const [type, setType] = React.useState(location?.state?.data?.type);
-  const [value, setValue] = React.useState(location?.state?.data?.value);
+  const [value, setValue] = React.useState(location?.state?.data?.contact);
   const [visible, setVisible] = React.useState(false);
 
-  const create = async () => {
+  const update = async () => {
 
     try {
 
-      if(end) {
-        let response = await fetch('https://127.0.0.1:8585/partys/classifications/update', {
+      if(token && partyCode) {
+        let response = await fetch('https://127.0.0.1:8585/partys/contacts/update', {
           method: 'PUT',
           headers: {
             Accept: 'application/json', 
@@ -50,16 +47,22 @@ export default function PartyContactEditForm({token, partyCode}) {
           },
           body:JSON.stringify({
             partyCode:partyCode,
-            partyClassificationId:location?.state?.data?.id,
-            end:end
+            contactId:location?.state?.data?.id,
+            active:enabled
           })
         });
 
         let json = await response.json();
         if(json.status) {
-          
+          navigation.push("/global/party/edit/contact");
         }
       }
+      else {
+        notification.error({
+          message:"Error", 
+          description:"Update failed"
+        });
+      }     
     } 
     catch (error) {
           
@@ -68,8 +71,6 @@ export default function PartyContactEditForm({token, partyCode}) {
         description:error?.message
       });
     }
-
-    navigation.push("/global/party/edit/classification");
   }
 
   return (
@@ -83,15 +84,15 @@ export default function PartyContactEditForm({token, partyCode}) {
                 <GoldFilled/> Party
               </Breadcrumb.Item>
               <Breadcrumb.Item>
-                <BankFilled/> Classification
+                <ContactsFilled/> Contact
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 Edit
               </Breadcrumb.Item>
             </Breadcrumb>
-            <DataToolbar saveAction={create}
-                        cancelAction={()=>navigation.push("/global/party/edit/classification")}
-                        printAction={()=>setVisible(true)}/>
+            <DataToolbar saveAction={update}
+                         cancelAction={()=>navigation.push("/global/party/edit/contact")}
+                         printAction={()=>{setVisible(true)}}/>
 
             <div style={{
                           width:"99%", 
@@ -109,32 +110,31 @@ export default function PartyContactEditForm({token, partyCode}) {
                 <Form style={{width:"60%", alignSelf:"flex-start", padding:3}} 
                       labelCol={{span:8}} 
                       wrapperCol={{span:16}} 
-                      form={form}>
+                      form={form}
+                      size="small">
                   
-                  <Form.Item label="Sart Date" name="start">
-                    <DatePicker name="start" value={start?moment(start):null}
-                        onChange={(dt, txt)=>setStart(moment(dt).format("YYYY-MM-DD"))} 
-                        defaultValue={start?moment(start):null} format="DD-MM-YYYY"/>
-                    </Form.Item>
-                    <Form.Item label="End Date" name="end" rules={[{ required: true }]}>
-                        <DatePicker name="end" format="DD-MM-YYYY" 
-                                    defaultValue={end?moment(end):null}
-                                    onChange={(dt, txt)=>setEnd(moment(dt).format("YYYY-MM-DD"))}/>
-                    </Form.Item>
-                    <Form.Item label="Type" name="type">
+                    <Form.Item label="Type" name="type" rules={[{ required: true }]}>
                         <Select name="type" defaultValue={type} onChange={(txt)=>setType(txt)}>
-                            <Select.Option value="INDUSTRY_CLASSIFICATION">Industry Classification</Select.Option>
-                            <Select.Option value="SIZE_CLASSIFICATION">Size Classification</Select.Option>
-                            <Select.Option value="INCOME_CLASSIFICATIONS">Income Classification</Select.Option>
+                            <Select.Option value="CELL_PHONE">Cell Phone</Select.Option>
+                            <Select.Option value="HOME_PHONE">Home Phone</Select.Option>
+                            <Select.Option value="OFFICE_PHONE">Office Phone</Select.Option>
+                            <Select.Option value="PAGER">Pager</Select.Option>
+                            <Select.Option value="EMAIL">Email</Select.Option>
+                            <Select.Option value="POSTBOX">Post Box</Select.Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item label="Value" name="valueText">
+                    <Form.Item label="Value" name="valueText" rules={[{ required: true }]}>
                         <Input name="valueTxt" defaultValue={value} onChange={(e)=>setValue(e.target.value)}/>
+                    </Form.Item>
+                    <Form.Item label="enabled" name="enabled">
+                        <Checkbox checked={enabled} onChange={(e)=>setEnabled(e.target.checked)}/>
                     </Form.Item>
                 </Form>
             </div>
         </Layout.Content>
-        <PartyClassificationPrint visible={visible} data={location.state.data} cancelAction={()=>setVisible(false)}/>
-    </>
+        <PartyContactPrint visible={visible} 
+                          data={location?.state?.data} 
+                          cancelAction={()=>setVisible(false)}/>
+      </>
   )
 }
