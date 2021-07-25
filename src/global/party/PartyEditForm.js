@@ -41,6 +41,10 @@ import PartyContact from './contact/PartyContact';
 import PartyContactAddForm from './contact/PartyContactAddForm';
 import PartyContactEditForm from './contact/PartyContactEditForm';
 
+import PartyAddress from './address/PartyAddress';
+import PartyAddressAddForm from './address/PartyAddressAddForm';
+import PartyAddressEditForm from './address/PartyAddressEditForm';
+
 export default function PartyEditForm({token}) {
 
   const navigation = useHistory();
@@ -233,7 +237,17 @@ export default function PartyEditForm({token}) {
                   </Route>
                 </Switch>
               </Tabs.TabPane>
-              <Tabs.TabPane tab={<span><ContainerFilled/>Address</span>} key="AddressTab"></Tabs.TabPane>
+              <Tabs.TabPane tab={<span><ContainerFilled/>Address</span>} key="address">
+                  <Route exact path="/global/party/edit/address">
+                    <PartyAddress token={token} partyCode={code}/>
+                  </Route>
+                  <Route exact path="/global/party/edit/address/add">
+                    <PartyAddressAddForm token={token} partyCode={code}/>
+                  </Route>
+                  <Route exact path="/global/party/edit/address/edit">
+                    <PartyAddressEditForm token={token} partyCode={code}/>
+                  </Route>
+              </Tabs.TabPane>
               <Tabs.TabPane tab={<span><SlidersFilled/>Role</span>} key="RoleTab"></Tabs.TabPane>
               <Tabs.TabPane tab={<span><InteractionFilled/>Relationship</span>} key="RelationshipTab"></Tabs.TabPane>
             </Tabs>
