@@ -10,14 +10,6 @@ import {
     Checkbox
 } from 'antd';
 
-import { 
-    ContactsFilled,
-    GlobalOutlined,
-    GoldFilled,
-} from '@ant-design/icons';
-
-import moment from 'moment';
-
 import DataToolbar from '../../../component/DataToolbar';
 
 export default function PartyContactAddForm({token, partyCode}) {
@@ -71,20 +63,6 @@ export default function PartyContactAddForm({token, partyCode}) {
 
   return (
         <Layout.Content style={{backgroundColor:"#FFFFFF"}}>
-            <Breadcrumb style={{padding:10}}>
-              <Breadcrumb.Item>
-                <GlobalOutlined/> Global
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>
-                <GoldFilled/> Party
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>
-                <ContactsFilled/> Contact
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>
-                Add New
-              </Breadcrumb.Item>
-            </Breadcrumb>
             <DataToolbar saveAction={create}
                         cancelAction={()=>navigation.push("/global/party/edit/contact")}
                         printAction={()=>{}}/>

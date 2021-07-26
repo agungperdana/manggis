@@ -5,7 +5,6 @@ import {
 } from 'react-router-dom';
 import { 
     Layout,
-    Breadcrumb,
     notification,
     Form,
     Input,
@@ -16,26 +15,25 @@ import {
 import moment from 'moment';
 
 import DataToolbar from '../../../component/DataToolbar';
-import PartyClassificationPrint from './PartyClassificationPrint';
+import PartyRolePrint from './PartyRolePrint';
 
-export default function PartyClassificationEditForm({token, partyCode}) {
+export default function PartyRoleEditForm({token, partyCode}) {
 
   const navigation = useHistory();
   const location = useLocation();
 
   const [form] = Form.useForm();
-  const [start, setStart] = React.useState(location?.state?.data?.start?moment(location.state.data.start):null);
-  const [end, setEnd] = React.useState(location?.state?.data?.end?moment(location.state.data.end):null);
+  const [start, setStart] = React.useState(moment(location?.state?.data?.start));
+  const [end, setEnd] = React.useState(null);
   const [type, setType] = React.useState(location?.state?.data?.type);
-  const [value, setValue] = React.useState(location?.state?.data?.value);
   const [visible, setVisible] = React.useState(false);
 
-  const create = async () => {
+  const update = async () => {
 
     try {
 
       if(end) {
-        let response = await fetch('https://127.0.0.1:8585/partys/classifications/update', {
+        let response = await fetch('https://127.0.0.1:8585/partys/roles/update', {
           method: 'PUT',
           headers: {
             Accept: 'application/json', 
@@ -44,7 +42,7 @@ export default function PartyClassificationEditForm({token, partyCode}) {
           },
           body:JSON.stringify({
             partyCode:partyCode,
-            partyClassificationId:location?.state?.data?.id,
+            partyRoleId:location?.state?.data?.id,
             end:end
           })
         });
@@ -63,14 +61,14 @@ export default function PartyClassificationEditForm({token, partyCode}) {
       });
     }
 
-    navigation.push("/global/party/edit/classification");
+    navigation.push("/global/party/edit/role");
   }
 
   return (
       <>
         <Layout.Content style={{backgroundColor:"#FFFFFF"}}>
-            <DataToolbar saveAction={create}
-                        cancelAction={()=>navigation.push("/global/party/edit/classification")}
+            <DataToolbar saveAction={update}
+                        cancelAction={()=>navigation.push("/global/party/edit/role")}
                         printAction={()=>setVisible(true)}/>
 
             <div style={{
@@ -103,18 +101,31 @@ export default function PartyClassificationEditForm({token, partyCode}) {
                     </Form.Item>
                     <Form.Item label="Type" name="type">
                         <Select name="type" defaultValue={type} onChange={(txt)=>setType(txt)}>
-                            <Select.Option value="INDUSTRY_CLASSIFICATION">Industry Classification</Select.Option>
-                            <Select.Option value="SIZE_CLASSIFICATION">Size Classification</Select.Option>
-                            <Select.Option value="INCOME_CLASSIFICATIONS">Income Classification</Select.Option>
+                            <Select.Option value="CUSTOMER">Customer</Select.Option>
+                            <Select.Option value="SUPPLIER">Supplier</Select.Option>
+                            <Select.Option value="AGENT">Agent</Select.Option>
+                            <Select.Option value="EMPLOYER">Employer</Select.Option>
+                            <Select.Option value="EMPLOYEE">Employee</Select.Option>
+                            <Select.Option value="BRANCH">Branch</Select.Option>
+                            <Select.Option value="DIVISION">Division</Select.Option>
+                            <Select.Option value="DEPARTMENT">Department</Select.Option>
+                            <Select.Option value="INTERNAL_ORGANIZATION">Internal Organization</Select.Option>
+                            <Select.Option value="CONTRACTOR">Contractor</Select.Option>
+                            <Select.Option value="FAMILY_MEMBER">Family Member</Select.Option>
+                            <Select.Option value="CONTACT">Contact</Select.Option>
+                            <Select.Option value="PROSPECT">Prospect</Select.Option>
+                            <Select.Option value="SHAREHOLDER">Shareholder</Select.Option>
+                            <Select.Option value="DISTRIBUTOR">Distributor</Select.Option>
+                            <Select.Option value="PARENT_ORGANIZATION">Parent Organization</Select.Option>
+                            <Select.Option value="SUBSIDIARY">Subsidiary</Select.Option>
+                            <Select.Option value="HEALTCARE_PRACTITIONER">Healthcare Practitioner</Select.Option>
+                            <Select.Option value="HEALTCARE_PROVIDER">Healthcare Provider</Select.Option>
                         </Select>
-                    </Form.Item>
-                    <Form.Item label="Value" name="valueText">
-                        <Input name="valueTxt" defaultValue={value} onChange={(e)=>setValue(e.target.value)}/>
                     </Form.Item>
                 </Form>
             </div>
         </Layout.Content>
-        <PartyClassificationPrint visible={visible} data={location.state.data} cancelAction={()=>setVisible(false)}/>
+        <PartyRolePrint visible={visible} data={location.state.data} cancelAction={()=>setVisible(false)}/>
     </>
   )
 }

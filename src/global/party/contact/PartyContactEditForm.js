@@ -5,19 +5,12 @@ import {
 } from 'react-router-dom';
 import { 
     Layout,
-    Breadcrumb,
     notification,
     Form,
     Input,
     Select,
     Checkbox
 } from 'antd';
-
-import { 
-    ContactsFilled,
-    GlobalOutlined,
-    GoldFilled,
-} from '@ant-design/icons';
 
 import DataToolbar from '../../../component/DataToolbar';
 import PartyContactPrint from './PartyContactPrint';
@@ -76,20 +69,6 @@ export default function PartyContactEditForm({token, partyCode}) {
   return (
       <>
         <Layout.Content style={{backgroundColor:"#FFFFFF"}}>
-            <Breadcrumb style={{padding:10}}>
-              <Breadcrumb.Item>
-                <GlobalOutlined/> Global
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>
-                <GoldFilled/> Party
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>
-                <ContactsFilled/> Contact
-              </Breadcrumb.Item>
-              <Breadcrumb.Item>
-                Edit
-              </Breadcrumb.Item>
-            </Breadcrumb>
             <DataToolbar saveAction={update}
                          cancelAction={()=>navigation.push("/global/party/edit/contact")}
                          printAction={()=>{setVisible(true)}}/>

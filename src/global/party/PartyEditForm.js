@@ -45,6 +45,10 @@ import PartyAddress from './address/PartyAddress';
 import PartyAddressAddForm from './address/PartyAddressAddForm';
 import PartyAddressEditForm from './address/PartyAddressEditForm';
 
+import PartyRole from './role/PartyRole';
+import PartyRoleAddForm from './role/PartyRoleAddForm';
+import PartyRoleEditForm from './role/PartyRoleEditForm';
+
 export default function PartyEditForm({token}) {
 
   const navigation = useHistory();
@@ -143,6 +147,9 @@ export default function PartyEditForm({token}) {
               </Breadcrumb.Item>
               <Breadcrumb.Item>
                 Edit
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                <span style={{fontWeight:500, color:"red"}}>{code +" - "+name}</span>
               </Breadcrumb.Item>
             </Breadcrumb>
             <Tabs type="card" onTabClick={(key)=>navigation.push("/global/party/edit/"+key)} style={{width:"99%", height:"95%", margin:5}}>
@@ -248,7 +255,17 @@ export default function PartyEditForm({token}) {
                     <PartyAddressEditForm token={token} partyCode={code}/>
                   </Route>
               </Tabs.TabPane>
-              <Tabs.TabPane tab={<span><SlidersFilled/>Role</span>} key="RoleTab"></Tabs.TabPane>
+              <Tabs.TabPane tab={<span><SlidersFilled/>Role</span>} key="role">
+                  <Route exact path="/global/party/edit/role">
+                    <PartyRole token={token} partyCode={code}/>
+                  </Route>
+                  <Route exact path="/global/party/edit/role/add">
+                    <PartyRoleAddForm token={token} partyCode={code}/>
+                  </Route>
+                  <Route exact path="/global/party/edit/role/edit">
+                    <PartyRoleEditForm token={token} partyCode={code}/>
+                  </Route>
+              </Tabs.TabPane>
               <Tabs.TabPane tab={<span><InteractionFilled/>Relationship</span>} key="RelationshipTab"></Tabs.TabPane>
             </Tabs>
         </Layout.Content>
