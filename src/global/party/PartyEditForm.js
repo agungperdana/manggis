@@ -49,6 +49,10 @@ import PartyRole from './role/PartyRole';
 import PartyRoleAddForm from './role/PartyRoleAddForm';
 import PartyRoleEditForm from './role/PartyRoleEditForm';
 
+import PartyRelationship from './relationship/PartyRelationship';
+import PartyRelationshipAddForm from './relationship/PartyRelationshipAddForm';
+import PartyRelationshipEditForm from './relationship/PartyRelationshipEditForm';
+
 export default function PartyEditForm({token}) {
 
   const navigation = useHistory();
@@ -266,7 +270,29 @@ export default function PartyEditForm({token}) {
                     <PartyRoleEditForm token={token} partyCode={code}/>
                   </Route>
               </Tabs.TabPane>
-              <Tabs.TabPane tab={<span><InteractionFilled/>Relationship</span>} key="RelationshipTab"></Tabs.TabPane>
+              <Tabs.TabPane tab={<span><InteractionFilled/>Relationship</span>} key="relationship">
+                  <Route exact path="/global/party/edit/relationship">
+                    <PartyRelationship token={token} partyCode={code}/>
+                  </Route>
+                  <Route exact path="/global/party/edit/relationship/add">
+                    <PartyRelationshipAddForm token={token} partyCode={code}/>
+                  </Route>
+                  <Route exact path="/global/party/edit/relationship/edit">
+                    <PartyRelationshipEditForm token={token} partyCode={code}/>
+                  </Route>
+              </Tabs.TabPane>
+              {
+                type && type === "PERSON"?
+                <>
+                  <Tabs.TabPane tab={<span><InteractionFilled/>Marital Status</span>} key="marital">
+                  </Tabs.TabPane>
+                  <Tabs.TabPane tab={<span><InteractionFilled/>Citizenship</span>} key="citizenship">
+                  </Tabs.TabPane>
+                  <Tabs.TabPane tab={<span><InteractionFilled/>Physical Characteristic</span>} key="physical">
+                  </Tabs.TabPane>
+                </>
+                :<></>
+              }
             </Tabs>
         </Layout.Content>
         <PartyPrint cancelAction={()=>setVisible(false)} visible={visible} data={location?.state?.rowData}/>
