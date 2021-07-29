@@ -18,6 +18,7 @@ import {
 } from 'antd';
 
 import { 
+  ApiFilled,
   BankFilled,
   ContactsFilled,
     ContainerFilled,
@@ -52,6 +53,10 @@ import PartyRoleEditForm from './role/PartyRoleEditForm';
 import PartyRelationship from './relationship/PartyRelationship';
 import PartyRelationshipAddForm from './relationship/PartyRelationshipAddForm';
 import PartyRelationshipEditForm from './relationship/PartyRelationshipEditForm';
+
+import MaritalStatus from './marital-status/MaritalStatus';
+import MaritalStatusAddForm from './marital-status/MaritalStatusAddForm';
+import MaritalStatusEditForm from './marital-status/MaritalStatusEditForm';
 
 export default function PartyEditForm({token}) {
 
@@ -249,6 +254,7 @@ export default function PartyEditForm({token}) {
                 </Switch>
               </Tabs.TabPane>
               <Tabs.TabPane tab={<span><ContainerFilled/>Address</span>} key="address">
+              <Switch>
                   <Route exact path="/global/party/edit/address">
                     <PartyAddress token={token} partyCode={code}/>
                   </Route>
@@ -258,8 +264,10 @@ export default function PartyEditForm({token}) {
                   <Route exact path="/global/party/edit/address/edit">
                     <PartyAddressEditForm token={token} partyCode={code}/>
                   </Route>
+              </Switch>
               </Tabs.TabPane>
               <Tabs.TabPane tab={<span><SlidersFilled/>Role</span>} key="role">
+              <Switch>
                   <Route exact path="/global/party/edit/role">
                     <PartyRole token={token} partyCode={code}/>
                   </Route>
@@ -269,8 +277,10 @@ export default function PartyEditForm({token}) {
                   <Route exact path="/global/party/edit/role/edit">
                     <PartyRoleEditForm token={token} partyCode={code}/>
                   </Route>
+              </Switch>
               </Tabs.TabPane>
               <Tabs.TabPane tab={<span><InteractionFilled/>Relationship</span>} key="relationship">
+              <Switch>
                   <Route exact path="/global/party/edit/relationship">
                     <PartyRelationship token={token} partyCode={code}/>
                   </Route>
@@ -280,11 +290,23 @@ export default function PartyEditForm({token}) {
                   <Route exact path="/global/party/edit/relationship/edit">
                     <PartyRelationshipEditForm token={token} partyCode={code}/>
                   </Route>
+              </Switch>
               </Tabs.TabPane>
               {
                 type && type === "PERSON"?
                 <>
-                  <Tabs.TabPane tab={<span><InteractionFilled/>Marital Status</span>} key="marital">
+                  <Tabs.TabPane tab={<span><ApiFilled/>Marital Status</span>} key="marital-status">
+                  <Switch>
+                    <Route exact path="/global/party/edit/marital-status">
+                      <MaritalStatus token={token} partyCode={code}/>
+                    </Route>
+                    <Route exact path="/global/party/edit/marital-status/add">
+                      <MaritalStatusAddForm token={token} partyCode={code}/>
+                    </Route>
+                    <Route exact path="/global/party/edit/marital-status/edit">
+                      <MaritalStatusEditForm token={token} partyCode={code}/>
+                    </Route>
+                  </Switch>
                   </Tabs.TabPane>
                   <Tabs.TabPane tab={<span><InteractionFilled/>Citizenship</span>} key="citizenship">
                   </Tabs.TabPane>
