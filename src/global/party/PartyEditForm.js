@@ -58,6 +58,8 @@ import MaritalStatus from './marital-status/MaritalStatus';
 import MaritalStatusAddForm from './marital-status/MaritalStatusAddForm';
 import MaritalStatusEditForm from './marital-status/MaritalStatusEditForm';
 
+import Citizenship from './citizenship/Citizenship';
+
 export default function PartyEditForm({token}) {
 
   const navigation = useHistory();
@@ -309,6 +311,11 @@ export default function PartyEditForm({token}) {
                   </Switch>
                   </Tabs.TabPane>
                   <Tabs.TabPane tab={<span><InteractionFilled/>Citizenship</span>} key="citizenship">
+                  <Switch>
+                    <Route exact path="/global/party/edit/citizenship">
+                      <Citizenship token={token} partyCode={code}/>
+                    </Route>
+                  </Switch>
                   </Tabs.TabPane>
                   <Tabs.TabPane tab={<span><InteractionFilled/>Physical Characteristic</span>} key="physical">
                   </Tabs.TabPane>
