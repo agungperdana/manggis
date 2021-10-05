@@ -12,7 +12,7 @@ export default function CitizenshipPrint({visible, confirmAction, cancelAction, 
             <table className="cont" style={{border:"none", width:"70%"}}>
             <tbody>
                 <tr>
-                    <td align="left" width={100}>Start</td>
+                    <td align="left" width={185}>Start</td>
                     <td width={10}>:</td>
                     <td align="left">{data?.start?moment(data.start).format('DD-MM-YYYY'):"---"}</td>
                 </tr>

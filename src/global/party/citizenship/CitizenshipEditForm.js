@@ -15,25 +15,27 @@ import {
 import moment from 'moment';
 
 import DataToolbar from '../../../component/DataToolbar';
-import PartyRolePrint from './PartyRolePrint';
+import CitizenshipPrint from './CitizenshipPrint';
 
-export default function PartyRoleEditForm({token, partyCode}) {
+export default function CitizenshipEditForm({token, partyCode}) {
 
   const navigation = useHistory();
   const location = useLocation();
 
   const [form] = Form.useForm();
   const [start, setStart] = React.useState(moment(location?.state?.data?.start));
-  const [end, setEnd] = React.useState(null);
-  const [type, setType] = React.useState(location?.state?.data?.type);
+  const [end, setEnd] = React.useState(location?.state?.data?.end);
+  const [passportNumber, setPassportNumber] = React.useState(location?.state?.data?.passportNumber);
+  const [passportIssuedDate, setPassportIssuedDate] = React.useState(location?.state?.data?.passportIssuedDate);
+  const [passportExpiredDate, setPassportExpiredDate] = React.useState(location?.state?.data?.passportExpiredDate);
+  const [countryCode, setCountryCode] = React.useState(location?.state?.data?.country);
   const [visible, setVisible] = React.useState(false);
 
   const update = async () => {
 
     try {
-
-      if(end) {
-        let response = await fetch('https://127.0.0.1:8585/partys/roles/update', {
+        
+        let response = await fetch('https://127.0.0.1:8585/partys/citizenships/update', {
           method: 'PUT',
           headers: {
             Accept: 'application/json', 
@@ -42,8 +44,11 @@ export default function PartyRoleEditForm({token, partyCode}) {
           },
           body:JSON.stringify({
             partyCode:partyCode,
-            partyRoleId:location?.state?.data?.id,
-            end:end
+            citizenshipId:location?.state?.data?.id,
+            end:end,
+            passportNumber:passportNumber,
+            passportIssuedDate:passportIssuedDate,
+            passportExpiredDate:passportExpiredDate
           })
         });
 
@@ -51,7 +56,6 @@ export default function PartyRoleEditForm({token, partyCode}) {
         if(json.status) {
           
         }
-      }
     } 
     catch (error) {
           
@@ -61,14 +65,14 @@ export default function PartyRoleEditForm({token, partyCode}) {
       });
     }
 
-    navigation.push("/global/party/edit/role");
+    navigation.push("/global/party/edit/citizenship");
   }
 
   return (
       <>
         <Layout.Content style={{backgroundColor:"#FFFFFF"}}>
             <DataToolbar saveAction={update}
-                        cancelAction={()=>navigation.push("/global/party/edit/role")}
+                        cancelAction={()=>navigation.push("/global/party/edit/citizenship")}
                         printAction={()=>setVisible(true)}/>
 
             <div style={{
@@ -94,38 +98,33 @@ export default function PartyRoleEditForm({token, partyCode}) {
                         onChange={(dt, txt)=>setStart(moment(dt).format("YYYY-MM-DD"))} 
                         defaultValue={start?moment(start):null} format="DD-MM-YYYY"/>
                     </Form.Item>
-                    <Form.Item label="End Date" name="end" rules={[{ required: true }]}>
+                    <Form.Item label="End Date" name="end">
                         <DatePicker name="end" format="DD-MM-YYYY" 
                                     defaultValue={end?moment(end):null}
                                     onChange={(dt, txt)=>setEnd(moment(dt).format("YYYY-MM-DD"))}/>
                     </Form.Item>
-                    <Form.Item label="Type" name="type">
-                        <Select name="type" defaultValue={type} onChange={(txt)=>setType(txt)}>
-                            <Select.Option value="CUSTOMER">Customer</Select.Option>
-                            <Select.Option value="SUPPLIER">Supplier</Select.Option>
-                            <Select.Option value="AGENT">Agent</Select.Option>
-                            <Select.Option value="EMPLOYER">Employer</Select.Option>
-                            <Select.Option value="EMPLOYEE">Employee</Select.Option>
-                            <Select.Option value="BRANCH">Branch</Select.Option>
-                            <Select.Option value="DIVISION">Division</Select.Option>
-                            <Select.Option value="DEPARTMENT">Department</Select.Option>
-                            <Select.Option value="INTERNAL_ORGANIZATION">Internal Organization</Select.Option>
-                            <Select.Option value="CONTRACTOR">Contractor</Select.Option>
-                            <Select.Option value="FAMILY_MEMBER">Family Member</Select.Option>
-                            <Select.Option value="CONTACT">Contact</Select.Option>
-                            <Select.Option value="PROSPECT">Prospect</Select.Option>
-                            <Select.Option value="SHAREHOLDER">Shareholder</Select.Option>
-                            <Select.Option value="DISTRIBUTOR">Distributor</Select.Option>
-                            <Select.Option value="PARENT_ORGANIZATION">Parent Organization</Select.Option>
-                            <Select.Option value="SUBSIDIARY">Subsidiary</Select.Option>
-                            <Select.Option value="HEALTCARE_PRACTITIONER">Healthcare Practitioner</Select.Option>
-                            <Select.Option value="HEALTCARE_PROVIDER">Healthcare Provider</Select.Option>
-                        </Select>
+                    <Form.Item label="Passport Number" name="passportNumber">
+                        <Input name="passportNumber" onChange={(e)=>setPassportNumber(e.target.value)} defaultValue={passportNumber}/>
+                    </Form.Item>
+                    <Form.Item label="Passport Issued Date" name="passportIssuedDate">
+                        <DatePicker name="passportIssuedDate" format="DD-MM-YYYY" 
+                                    onChange={(dt, txt)=>setPassportIssuedDate(moment(dt).format("YYYY-MM-DD"))}
+                                    defaultValue={passportIssuedDate?moment(passportIssuedDate):null}/>
+                    </Form.Item>
+                    <Form.Item label="Passport Expired Date" name="passportExpiredDate">
+                        <DatePicker name="passportExpiredDate" format="DD-MM-YYYY" 
+                                    onChange={(dt, txt)=>setPassportExpiredDate(moment(dt).format("YYYY-MM-DD"))}
+                                    defaultValue={passportExpiredDate?moment(passportExpiredDate):null}/>
+                    </Form.Item>
+                    <Form.Item label="Country Code" name="countryCode" rules={[{ required: true }]}>
+                      <Select name="countryCode" defaultValue={countryCode.code}>
+                        <Select.Option key={countryCode.code} value={countryCode.code}>{countryCode.name}</Select.Option>
+                      </Select>
                     </Form.Item>
                 </Form>
             </div>
         </Layout.Content>
-        <PartyRolePrint visible={visible} data={location.state.data} cancelAction={()=>setVisible(false)}/>
+        <CitizenshipPrint visible={visible} data={location.state.data} cancelAction={()=>setVisible(false)}/>
     </>
   )
 }

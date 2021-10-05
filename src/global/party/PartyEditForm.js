@@ -59,6 +59,8 @@ import MaritalStatusAddForm from './marital-status/MaritalStatusAddForm';
 import MaritalStatusEditForm from './marital-status/MaritalStatusEditForm';
 
 import Citizenship from './citizenship/Citizenship';
+import CitizenshipAddForm from './citizenship/CitizenshipAddForm';
+import CitizenshipEditForm from './citizenship/CitizenshipEditForm';
 
 export default function PartyEditForm({token}) {
 
@@ -314,6 +316,12 @@ export default function PartyEditForm({token}) {
                   <Switch>
                     <Route exact path="/global/party/edit/citizenship">
                       <Citizenship token={token} partyCode={code}/>
+                    </Route>
+                    <Route exact path="/global/party/edit/citizenship/add">
+                      <CitizenshipAddForm token={token} partyCode={code}/>
+                    </Route>
+                    <Route exact path="/global/party/edit/citizenship/edit">
+                      <CitizenshipEditForm token={token} partyCode={code}/>
                     </Route>
                   </Switch>
                   </Tabs.TabPane>

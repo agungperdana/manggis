@@ -63,7 +63,7 @@ export default function Citizenship({token, partyCode}) {
                     },
                     body:JSON.stringify({
                         partyCode:partyCode,
-                        partyRoleId:id
+                        citizenshipId:id
                     })
                 });
             
@@ -91,14 +91,18 @@ export default function Citizenship({token, partyCode}) {
         {title:"End", dataIndex:"end", key:"end", width:130, render:(txt, row)=>(
             row.end?moment(new Date(row.end)).format("DD-MM-YYYY"):"---"
         )},
-        {title:"Passport No", dataIndex:"passportNumber", key:"passportNumber", width:300},
-        {title:"Issued Date", dataIndex:"passportIssuedDate", key:"passportIssuedDate", width:100},
-        {title:"Expired Date", dataIndex:"passportExpiredDate", key:"passportExpiredDate", width:100},
-        {title:"Country", dataIndex:"", key:"country", width:100, render:(country)=>country?.name},
+        {title:"Passport No", dataIndex:"passportNumber", key:"passportNumber", width:250},
+        {title:"Country", dataIndex:"", key:"country", width:150, render:(txt, row)=>row?.country?.name},
+        {title:"Issued Date", dataIndex:"passportIssuedDate", key:"passportIssuedDate", width:130, render:(txt, row)=>(
+            row.passportIssuedDate?moment(new Date(row.passportIssuedDate)).format("DD-MM-YYYY"):"---"
+        )},
+        {title:"Expired Date", dataIndex:"passportExpiredDate", key:"passportExpiredDate", width:130, render:(txt, row)=>(
+            row.passportExpiredDate?moment(new Date(row.passportExpiredDate)).format("DD-MM-YYYY"):"---"
+        )},
         {title:"", dataIndex:"", key:"Action", width:100, render:(txt, row, index)=>(
             <RowToolbar delAction={()=>{remove(row.id)}} 
                         editAction={()=> {
-                            navigation.push("/global/party/edit/citizenship/edit/",{data:row});
+                            navigation.push("/global/party/edit/citizenship/edit/", {data:row});
                         }}
                         printAction={()=>{
                             setRow(row);
