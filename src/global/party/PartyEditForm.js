@@ -325,8 +325,6 @@ export default function PartyEditForm({token}) {
                     </Route>
                   </Switch>
                   </Tabs.TabPane>
-                  <Tabs.TabPane tab={<span><InteractionFilled/>Physical Characteristic</span>} key="physical">
-                  </Tabs.TabPane>
                 </>
                 :<></>
               }
