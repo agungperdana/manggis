@@ -6,8 +6,8 @@ import {
     notification,
     Form,
     Input,
-    Select,
-    Checkbox
+    Checkbox,
+    Table
 } from 'antd';
 
 import { 
@@ -24,13 +24,52 @@ export default function RoleAddForm({token}) {
   const [name, setName] = React.useState(null);
   const [note, setNote] = React.useState(null);
   const [enabled, setEnabled] = React.useState(true);
+  const [modules, setModules] = React.useState([]);
+
+  const getModules = async () => {
+    try {
+
+      let response = await fetch('https://127.0.0.1:8585/modules/all-modules/0/1000', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json', 
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer '+token,
+          }
+        });
+
+        let json = await response.json();
+        if(json.status) {
+          
+          let mods = [];
+
+          json.result.map(obj=>{
+            mods.push({
+              moduleCode:obj?.code,
+              moduleName:obj?.name,
+              moduleGroup:obj?.group,
+              read:false,
+              add:false,
+              edit:false,
+              delete:false,
+              print:false
+            });
+          })
+
+          mods.sort();
+          setModules(mods);
+        }
+    } 
+    catch (error) {}
+  }
+
+  React.useEffect(()=>{getModules()},[])
 
   const create = async () => {
 
     try {
 
       if(code && name) {
-
         let response = await fetch('https://127.0.0.1:8585/roles/create', {
           method: 'POST',
           headers: {
@@ -42,7 +81,8 @@ export default function RoleAddForm({token}) {
             'code':code,
             'name':name,
             'note':note,
-            'enabled':enabled
+            'enabled':enabled,
+            'modules':modules
           })
         });
 
@@ -67,6 +107,16 @@ export default function RoleAddForm({token}) {
     }
   }
 
+  const column = [
+    {title:"Code", dataIndex:"moduleCode", key:"Code", width:200},
+    {title:"Name", dataIndex:"moduleName", key:"Name"},
+    {title:"Read", dataIndex:"", key:"read", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).read=e.target.checked}/>},
+    {title:"Add", dataIndex:"", key:"add", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).add=e.target.checked}/>},
+    {title:"Edit", dataIndex:"", key:"edit", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).edit=e.target.checked}/>},
+    {title:"Delete", dataIndex:"", key:"delete", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).delete=e.target.checked}/>},
+    {title:"Print", dataIndex:"", key:"print", width:65, render:(text, row)=><Checkbox onChange={(e)=>modules.find(md=>md.moduleCode===row.moduleCode).print=e.target.checked}/>}
+  ]
+
   return (
         <Layout.Content style={{backgroundColor:"#FFFFFF"}}>
             <Breadcrumb style={{padding:10}}>
@@ -82,7 +132,7 @@ export default function RoleAddForm({token}) {
             </Breadcrumb>
             <DataToolbar saveAction={create}
                         cancelAction={()=>navigation.push("/access/role/list")}
-                        printAction={()=>navigation.push("/access/role/list")}/>
+                        printAction={()=>{}}/>
 
             <div style={{
                           width:"99%", 
@@ -115,6 +165,10 @@ export default function RoleAddForm({token}) {
                     <Input onChange={(e)=>setNote(e.target.value)}/>
                   </Form.Item>
                 </Form>
+                <Table dataSource={modules} 
+                        columns={column} 
+                        style={{width:"100%"}} 
+                        size="small"/>
             </div>
         </Layout.Content>
   )

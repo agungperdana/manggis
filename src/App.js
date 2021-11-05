@@ -1,17 +1,33 @@
 import React from 'react';
 import ApplicationUI from './ApplicationUI';
-import Login from './Login';
+import { Login } from './login/Login';
 
-function App() {
+export default class App extends React.Component {
 
-  const [token, setToken] = React.useState(null);
+  constructor(props) {
+    super(props);
+    this.state = {
+      token:null,
+      user:null
+    };
 
-  if(token) {
-    return (<ApplicationUI token={token} setToken={setToken}/>)
+    this.onLoginSuccess = this.onLoginSuccess.bind(this);
   }
-  else {
-    return (<Login setToken={setToken}/>);
+
+  onLoginSuccess(_token, _user) {
+    this.setState({
+      token:_token,
+      user:_user
+    });
+  }
+
+  render() {
+
+    if(this.state.token) {
+      return (<ApplicationUI token={this.state.token} user={this.state.user}/>)
+    }
+    else {
+      return (<Login loginSuccess={this.onLoginSuccess}/>);
+    }
   }
 }
-
-export default App;

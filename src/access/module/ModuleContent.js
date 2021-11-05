@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom';
 import { 
     Layout,
     Breadcrumb,
-    Button,
     Modal,
     Table,
     notification,
@@ -13,13 +12,11 @@ import {
 import { 
     BuildOutlined,
     AppstoreOutlined,
-    ZoomInOutlined,
-    PlusCircleOutlined
+    CheckCircleTwoTone
 } from '@ant-design/icons';
 import RowToolbar from '../../component/RowToolbar';
 import ModulePrint from './ModulePrint';
 import TableTopBar from '../../component/TableTopBar';
-import Search from 'antd/lib/transfer/search';
 
 export default function ModuleContent({token}) {
 
@@ -127,19 +124,19 @@ export default function ModuleContent({token}) {
   }
 
   const column = [
-    {title:"", dataIndex:"", key:"Action", width:110, render:(txt, row)=>(
-        <RowToolbar delAction={()=>remove(row.code)} 
-                  editAction={()=>navigation.push("/access/module/edit", {rowData:row})}
-                  printAction={()=>{
-                    setRow(row);
-                    setVisible(true);
-                  }}/>
-    )},
     {title:"Code", dataIndex:"code", key:"Code"},
     {title:"Name", dataIndex:"name", key:"Name"},
     {title:"Description", dataIndex:"note", key:"Note"},
     {title:"Group", dataIndex:"group", key:"Group", width:100},
-    {title:"Enabled", dataIndex:"enabled", key:"Locked", width:50, render:(txt)=>txt?"Yes":"No"}
+    {title:"Enabled", dataIndex:"enabled", key:"Locked", width:50, render:(txt)=>txt?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"},
+    {title:"", dataIndex:"", key:"Action", width:110, render:(txt, row)=>(
+      <RowToolbar delAction={()=>remove(row.code)} 
+                editAction={()=>navigation.push("/access/module/edit", {rowData:row})}
+                printAction={()=>{
+                  setRow(row);
+                  setVisible(true);
+                }}/>
+    )},
   ]
 
   return (

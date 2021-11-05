@@ -12,6 +12,7 @@ import {
   NodeCollapseOutlined,
   NodeExpandOutlined,
   ApartmentOutlined,
+  GoldFilled,
 } from '@ant-design/icons';
 import {
   BrowserRouter as Router,
@@ -31,10 +32,19 @@ import RoleContent from './access/role/RoleContent';
 import RoleAddForm from './access/role/RoleAddForm';
 import RoleEditForm from './access/role/RoleEditForm';
 
-import UserContent from './access/UserContent';
+import UserContent from './access/user/UserContent';
+import UserAddForm from './access/user/UserAddForm';
+import UserEditForm from './access/user/UserEditForm';
 
+import GeographicContent from './global/geographic/GeographicContent';
+import GeographicAddForm from './global/geographic/GeographicAddForm';
+import GeographicEditForm from './global/geographic/GeographicEditForm';
 
-export default function ApplicationUI({token, setToken}) {
+import PartyContent from './global/party/PartyContent';
+import PartyAddForm from './global/party/PartyAddForm';
+import PartyEditForm from './global/party/PartyEditForm';
+
+export default function ApplicationUI({token, setToken, user}) {
   return (
     <Router>
       <Layout style={{display:"flex", height:"100%", width:"100%"}}>
@@ -79,12 +89,18 @@ export default function ApplicationUI({token, setToken}) {
                 </Menu.Item>
                 <Menu.Divider/>
                 <Menu.Item icon={<UserOutlined/>}>
-                  <Link to="/access/user">User</Link>
+                  <Link to="/access/user/list">User</Link>
                 </Menu.Item>
               </Menu.SubMenu>
               <Menu.Divider/>
               <Menu.SubMenu title="Global" icon={<GlobalOutlined/>}>
-                <Menu.Item icon={<CompassFilled/>}>Geographic</Menu.Item>
+                <Menu.Item icon={<CompassFilled/>}>
+                  <Link exact to="/global/geographic/list">Geographic</Link>
+                </Menu.Item>
+                <Menu.Divider/>
+                <Menu.Item icon={<GoldFilled/>}>
+                  <Link exact to="/global/party/list">Party</Link>
+                </Menu.Item>
                 <Menu.Divider/>
                 <Menu.Item icon={<ApartmentOutlined/>}>Company structure</Menu.Item>
               </Menu.SubMenu>
@@ -104,11 +120,17 @@ export default function ApplicationUI({token, setToken}) {
             </Menu>
           </Layout.Sider>
           <Layout>
-            <TopBar setToken={setToken}/>
+            <TopBar setToken={setToken} user={user}/>
             <Link exact to="/access/module/add"/>
             <Link exact to="/access/module/edit"/>
             <Link exact to="/access/role/add"/>
             <Link exact to="/access/role/edit"/>
+            <Link exact to="/access/user/add"/>
+            <Link exact to="/access/user/edit"/>
+            <Link exact to="/global/geographic/add"/>
+            <Link exact to="/global/geographic/edit"/>
+            <Link exact to="/global/party/add"/>
+            <Link to="/global/party/edit"/>
             <Switch>
               <Route exact path="/">
                 <HomeContent/>
@@ -131,8 +153,32 @@ export default function ApplicationUI({token, setToken}) {
               <Route exact path="/access/role/edit">
                 <RoleEditForm token={token}/>
               </Route>
-              <Route exact path="/access/user">
+              <Route exact path="/access/user/list">
                 <UserContent token={token}/>
+              </Route>
+              <Route exact path="/access/user/add">
+                <UserAddForm token={token}/>
+              </Route>
+              <Route exact path="/access/user/edit">
+                <UserEditForm token={token}/>
+              </Route>
+              <Route exact path="/global/geographic/list">
+                <GeographicContent token={token}/>
+              </Route>
+              <Route exact path="/global/geographic/add">
+                <GeographicAddForm token={token}/>
+              </Route>
+              <Route exact path="/global/geographic/edit">
+                <GeographicEditForm token={token}/>
+              </Route>
+              <Route exact path="/global/party/list">
+                <PartyContent token={token}/>
+              </Route>
+              <Route exact path="/global/party/add">
+                <PartyAddForm token={token}/>
+              </Route>
+              <Route path="/global/party/edit">
+                <PartyEditForm token={token}/>
               </Route>
             </Switch>
           </Layout>

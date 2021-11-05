@@ -25,13 +25,21 @@ export default function HomeContent({}) {
                           width:"99%", 
                           height:"95%",
                           backgroundColor:"#FFFFFF", 
-                          padding:5,
+                          padding:20,
                           margin:5, 
                           borderStyle:"solid",
                           borderColor:"#BFBFBF",
                           borderWidth:1,
-                          borderRadius:10}}>
-              askfjlasjlfkjaslkflkasfklaslkflk
+                          borderRadius:10, 
+                          alignContent:"flex-start",
+                          justifyContent:"flex-start",
+                          alignItems:"flex-start"}}>
+                            <p>
+                              Welcome,<br/>
+                              Manggis 1.0 is a Web application client for BelianERP.<br/>
+                              BelianERP is Enterprise Resouse Planning software aimed for Small Medium Company.
+                            </p>
+
             </Space>
         </Layout.Content>
     )

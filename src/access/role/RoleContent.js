@@ -12,6 +12,7 @@ import {
 import { 
     BuildOutlined,
     BlockOutlined,
+    CheckCircleTwoTone
 } from '@ant-design/icons';
 
 import RowToolbar from '../../component/RowToolbar';
@@ -30,7 +31,7 @@ export default function RoleContent({token}) {
   const search = async () => {
 
     if(searchKey) {
-      console.log(searchKey);
+ 
       try {
         let response = await fetch('https://127.0.0.1:8585/roles/filter/0/50/'+searchKey, {
             method: 'GET',
@@ -118,18 +119,18 @@ export default function RoleContent({token}) {
   }
 
   const column = [
-    {title:"", dataIndex:"", key:"Action", width:110, render:(txt, row)=>(
-        <RowToolbar delAction={()=>remove(row.code)} 
-                  editAction={()=>navigation.push("/access/role/edit", {rowData:row})}
-                  printAction={()=>{
-                    setRow(row);
-                    setVisible(true);
-                  }}/>
-    )},
     {title:"Code", dataIndex:"code", key:"Code"},
     {title:"Name", dataIndex:"name", key:"Name"},
     {title:"Description", dataIndex:"note", key:"Note"},
-    {title:"Enabled", dataIndex:"enabled", key:"Locked", width:50, render:(txt)=>txt?"Yes":"No"}
+    {title:"Enabled", dataIndex:"enabled", key:"Locked", width:50, render:(txt)=>txt?<CheckCircleTwoTone size="small" twoToneColor="#52c41a"/>:"---"},
+    {title:"", dataIndex:"", key:"Action", width:110, render:(txt, row)=>(
+      <RowToolbar delAction={()=>remove(row.code)} 
+                editAction={()=>navigation.push("/access/role/edit", {rowData:row})}
+                printAction={()=>{
+                  setRow(row);
+                  setVisible(true);
+                }}/>
+    )},
   ]
 
   return (

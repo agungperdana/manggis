@@ -14,7 +14,9 @@ import {
     BuildOutlined,
     AppstoreOutlined,
 } from '@ant-design/icons';
+
 import DataToolbar from '../../component/DataToolbar';
+import ModulePrint from './ModulePrint';
 
 export default function ModuleEditForm({token}) {
 
@@ -22,6 +24,7 @@ export default function ModuleEditForm({token}) {
   const location = useLocation();
 
   const [form] = Form.useForm();
+  const [visible, setVisible] = React.useState(false);
   const [code, setCode] = React.useState(location?.state?.rowData?.code);
   const [name, setName] = React.useState(location?.state?.rowData?.name);
   const [note, setNote] = React.useState(location?.state?.rowData?.note);
@@ -72,6 +75,7 @@ export default function ModuleEditForm({token}) {
   }
 
   return (
+      <>
         <Layout.Content style={{backgroundColor:"#FFFFFF"}}>
             <Breadcrumb style={{padding:10}}>
               <Breadcrumb.Item>
@@ -86,7 +90,7 @@ export default function ModuleEditForm({token}) {
             </Breadcrumb>
             <DataToolbar saveAction={update} 
                         cancelAction={()=>navigation.push("/access/module/list")}
-                        printAction={()=>navigation.push("/access/module/list")}/>
+                        printAction={()=>setVisible(true)}/>
 
             <div style={{
                           width:"99%", 
@@ -119,7 +123,7 @@ export default function ModuleEditForm({token}) {
                     </Select>
                   </Form.Item>
                   <Form.Item label="Enabled" name="enabled" rules={[{ required: true }]}>
-                    <Checkbox checked={enabled} onChange={(e)=>setEnabled(e.target.value)}/>
+                    <Checkbox defaultChecked={enabled} onChange={(e)=>setEnabled(e.target.checked)}/>
                   </Form.Item>
                   <Form.Item label="Description" name="note">
                     <Input defaultValue={note}  onChange={(e)=>setNote(e.target.value)}/>
@@ -127,5 +131,7 @@ export default function ModuleEditForm({token}) {
                 </Form>
             </div>
         </Layout.Content>
+        <ModulePrint visible={visible} confirmAction={()=>{}} cancelAction={() => setVisible(false)} data={location?.state?.rowData}/>
+      </>
   )
 }

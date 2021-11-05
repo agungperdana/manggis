@@ -4,18 +4,33 @@ import {
     Badge, 
     Tooltip,
     Avatar,
-    Button
+    Button,
+    Dropdown,
+    Menu
 } from 'antd';
 import { 
     AlertFilled,
     MessageFilled,
     SettingFilled,
-    PoweroffOutlined
+    PoweroffOutlined,
+    UserOutlined
 } from '@ant-design/icons';
 
-export default function TopBar({setToken}){
+export default function TopBar({setToken, user}){
 
     const navigation = useHistory();
+
+    const userMenu = (
+        <Menu>
+            <Menu.Item icon={<SettingFilled/>} onClick={()=>setToken(null)}>
+                Preferences
+            </Menu.Item>
+            <Menu.Divider/>
+            <Menu.Item title="Sign Out" onClick={()=>setToken(null)} icon={<PoweroffOutlined/>}>
+                Sign Out
+            </Menu.Item>
+        </Menu>
+    );
 
     return(
         <div align="right" style={{
@@ -43,12 +58,12 @@ export default function TopBar({setToken}){
                         size="small"/>
                 </a>
             </Tooltip>
-            <Tooltip placement="topLeft" title="Sign Out">
-                <Button shape="circle" size="small" icon={<PoweroffOutlined/>} 
-                        style={{marginLeft:10, backgroundColor:"#FF6961"}}
-                        onClick={()=>setToken(null)}>
-                </Button>
-            </Tooltip>
+            <Dropdown overlay={userMenu}>
+                <a>
+                    <Avatar size="small" style={{ marginLeft:10, marginRight:5, backgroundColor: '#333333' }} icon={<UserOutlined/>} />
+                    <span style={{fontWeight:500, color:"#333333", fontSize:12}}>{user?.name}</span>
+                </a>
+            </Dropdown>
         </div>
     )
 }
