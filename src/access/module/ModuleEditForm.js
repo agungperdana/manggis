@@ -25,11 +25,11 @@ export default function ModuleEditForm({token}) {
 
   const [form] = Form.useForm();
   const [visible, setVisible] = React.useState(false);
-  const [code, setCode] = React.useState(location?.state?.rowData?.code);
-  const [name, setName] = React.useState(location?.state?.rowData?.name);
-  const [note, setNote] = React.useState(location?.state?.rowData?.note);
-  const [group, setGroup] = React.useState(location?.state?.rowData?.group);
-  const [enabled, setEnabled] = React.useState(location?.state?.rowData?.enabled);
+  const [code, setCode] = React.useState(location?.state?.row?.code);
+  const [name, setName] = React.useState(location?.state?.row?.name);
+  const [note, setNote] = React.useState(location?.state?.row?.note);
+  const [group, setGroup] = React.useState(location?.state?.row?.group);
+  const [enabled, setEnabled] = React.useState(location?.state?.row?.enabled);
 
   const update = async () => {
 

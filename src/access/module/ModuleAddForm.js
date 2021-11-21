@@ -70,8 +70,8 @@ export default function ModuleAddForm({token}) {
   }
 
   return (
-        <Layout.Content style={{backgroundColor:"#FFFFFF"}}>
-            <Breadcrumb style={{padding:10}}>
+        <Layout.Content className="content">
+            <Breadcrumb className="breadcrumb">
               <Breadcrumb.Item>
                 <BuildOutlined/> Access
               </Breadcrumb.Item>

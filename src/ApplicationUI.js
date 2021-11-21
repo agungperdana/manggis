@@ -1,32 +1,17 @@
-import { Layout, Menu } from 'antd';
+import React from 'react';
+import { Layout } from 'antd';
 import 'antd/dist/antd.css';
-import { 
-  AppstoreFilled,
-  BuildOutlined,
-  AppstoreOutlined,
-  BlockOutlined,
-  UserOutlined,
-  GlobalOutlined,
-  HomeFilled,
-  CompassFilled,
-  NodeCollapseOutlined,
-  NodeExpandOutlined,
-  ApartmentOutlined,
-  GoldFilled,
-} from '@ant-design/icons';
+import './css/manggis.css';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  useHistory
 } from "react-router-dom";
 
 import TopBar from './component/TopBar';
 import HomeContent from './HomeContent';
-
-import ModuleContent from './access/module/ModuleContent';
-import ModuleAddForm from './access/module/ModuleAddForm';
-import ModuleEditForm from './access/module/ModuleEditForm';
 
 import RoleContent from './access/role/RoleContent';
 import RoleAddForm from './access/role/RoleAddForm';
@@ -44,80 +29,21 @@ import PartyContent from './global/party/PartyContent';
 import PartyAddForm from './global/party/PartyAddForm';
 import PartyEditForm from './global/party/PartyEditForm';
 
+import LeftMenu from './component/LeftMenu';
+import ModuleManager from './access/module/ModuleManager';
+
 export default function ApplicationUI({token, setToken, user}) {
+
   return (
     <Router>
-      <Layout style={{display:"flex", height:"100%", width:"100%"}}>
-        <Layout.Sider theme="dark" style={{height:"100%"}}>
-            <div style={{
-                          display:"flex",
-                          alignContent:"flex-start", 
-                          alignItems:"stretch", 
-                          justifyContent:"flex-start",
-                          padding:20,
-                          backgroundColor:"#FFFFFF",
-                          width:"100%",
-                          height:"15%"}}>
+      <Layout className="layout-outer">
+        <Layout.Sider theme="dark" className="layout-left-sider">
+            <div className="logo-and-title-container">
               <img src="/manggis-logo-32.png"/>
-              <h3 
-                style={{color:"#EC4D37", 
-                        fontWeight:900, 
-                        margin:0, 
-                        padding:0,
-                        fontSize:24,
-                        fontFamily:"fantasy",
-                        paddingLeft:5,
-                        borderBottomColor:"#F3CA20",
-                        borderBottomWidth:3,
-                        borderBottomStyle:"solid"
-              }}>Manggis</h3>
-              <font style={{color:"#8AAAE5", fontWeight:900, fontSize:18}}><sup>1.0</sup></font>
+              <h3 className="manggis-title">Manggis</h3>
+              <font className="manggis-title-version"><sup>1.0</sup></font>
             </div>
-            <Menu>
-              <Menu.Divider/>
-              <Menu.Item icon={<HomeFilled/>}>
-                <Link to="/">Home</Link>
-              </Menu.Item>
-              <Menu.Divider/>
-              <Menu.SubMenu title="Access" icon={<BuildOutlined/>}>
-                <Menu.Item icon={<AppstoreOutlined/>}>
-                  <Link exact to="/access/module/list">Module</Link>
-                </Menu.Item>
-                <Menu.Divider/>
-                <Menu.Item icon={<BlockOutlined/>}>
-                  <Link to="/access/role/list">Role</Link>
-                </Menu.Item>
-                <Menu.Divider/>
-                <Menu.Item icon={<UserOutlined/>}>
-                  <Link to="/access/user/list">User</Link>
-                </Menu.Item>
-              </Menu.SubMenu>
-              <Menu.Divider/>
-              <Menu.SubMenu title="Global" icon={<GlobalOutlined/>}>
-                <Menu.Item icon={<CompassFilled/>}>
-                  <Link exact to="/global/geographic/list">Geographic</Link>
-                </Menu.Item>
-                <Menu.Divider/>
-                <Menu.Item icon={<GoldFilled/>}>
-                  <Link exact to="/global/party/list">Party</Link>
-                </Menu.Item>
-                <Menu.Divider/>
-                <Menu.Item icon={<ApartmentOutlined/>}>Company structure</Menu.Item>
-              </Menu.SubMenu>
-              <Menu.Divider/>
-              <Menu.SubMenu title="CRM" icon={<AppstoreFilled/>}>
-                <Menu.Item icon={<NodeCollapseOutlined/>}>Customer</Menu.Item>
-                <Menu.Divider/>
-                <Menu.Item icon={<NodeExpandOutlined/>}>Supplier</Menu.Item>
-              </Menu.SubMenu>
-              <Menu.Divider/>
-              <Menu.Item></Menu.Item>
-              <Menu.Item></Menu.Item>
-              <Menu.Item></Menu.Item>
-              <Menu.Item></Menu.Item>
-              <Menu.Item></Menu.Item>
-              <Menu.Item></Menu.Item>
-            </Menu>
+            <LeftMenu/>
           </Layout.Sider>
           <Layout>
             <TopBar setToken={setToken} user={user}/>
@@ -131,18 +57,10 @@ export default function ApplicationUI({token, setToken, user}) {
             <Link exact to="/global/geographic/edit"/>
             <Link exact to="/global/party/add"/>
             <Link to="/global/party/edit"/>
+            <ModuleManager token={token}/>
             <Switch>
               <Route exact path="/">
                 <HomeContent/>
-              </Route>
-              <Route exact path="/access/module/list">
-                <ModuleContent token={token}/>
-              </Route>
-              <Route exact path="/access/module/add">
-                <ModuleAddForm token={token}/>
-              </Route>
-              <Route exact path="/access/module/edit">
-                <ModuleEditForm token={token}/>
               </Route>
               <Route exact path="/access/role/list">
                 <RoleContent token={token}/>

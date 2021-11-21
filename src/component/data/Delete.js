@@ -10,16 +10,28 @@ import {
     DeleteFilled,
 } from '@ant-design/icons';
 
-export class DeleteButton extends React.Component {
+export class Delete extends React.Component {
     
+    constructor(props) {
+
+        super(props);
+        this.deleteRow = this.deleteRow.bind(this);
+    }
+
+    deleteRow(e) {
+
+        this.props.doDelete(this.props.rowKey);
+    }
+
+
     render() {
         return (
             <Tooltip placement="bottomLeft" title="Delete data">
                 <Popconfirm title="Are you sure?" 
                             okText="Delete" 
                             cancelText="Cancel" 
-                            onConfirm={delAction}>
-                    <Button size="small" icon={<DeleteFilled/>} shape="circle" danger/>
+                            onConfirm={this.deleteSelectedRow}>
+                    <Button size="small" icon={<DeleteFilled/>} shape="circle" style={{marginLeft:3}} danger/>
                 </Popconfirm>
             </Tooltip>
         )

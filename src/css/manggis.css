@@ -1,0 +1,69 @@
+
+.logo-and-title-container {
+
+    display:flex;
+    align-content:flex-start;
+    align-items:stretch; 
+    justify-content:flex-start;
+    background-color:#FFFFFF;
+    padding: 2em;
+}
+
+.manggis-title {
+    color:#EC4D37; 
+    font-weight:900;
+    margin:2px; 
+    font-size:24;
+    font-family:fantasy;
+    padding-left:5;
+    border-bottom-color:#F3CA20;
+    border-bottom-width:3;
+    border-bottom-style:solid;
+}
+
+.manggis-title-version {
+    color:#8AAAE5;
+    font-weight:900;
+    font-size:18;
+}
+
+.layout-outer {
+    display:flex;
+    height:"100%";
+    width:"100%"
+}
+
+.layout-left-sider {
+    height:"100%";
+}
+
+.content {
+    background-color: #FFFFFF;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.breadcrumb {
+    padding: 10px;
+}
+
+.table-container {
+
+    width:"99%";
+    background-color:#FFFFFF; 
+    padding:5px;
+    margin:5px; 
+    border-style:solid;
+    border-color:#BFBFBF;
+    border-width:1px;
+    border-radius:10px;
+    align-items:stretch
+}
+
+.form {
+    
+    width:60%;
+    align-self:flex-start
+}

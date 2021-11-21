@@ -1,61 +1,49 @@
-import React, { Fragment } from "react";
+import React, { useState } from "react";
 import { Card, Layout, notification } from "antd";
-import { Name } from "./Name";
+import Name from "./Name";
 import { Password } from "./Password";
 import { Submit } from "./Submit";
 import { RememberMe } from "./RememberMe";
-import { ServerConstant, SERVER_ADDRESS, SERVER_HEADER, SERVER_METHOD_POST } from "../component/ServerConstant";
+import { SERVER_ADDRESS, SERVER_HEADER, SERVER_METHOD_POST } from "../component/ServerConstant";
+import * as jose from "jose";
 
-export class Login extends React.Component {
+export function Login(props) {
 
-    constructor(props) {
+    const[username, setUsername] = useState(null);
+    const[password, setPassword] = useState(null);
+    const[remember, setRemember] = useState(false)
 
-        super(props);
-        this.state = {
-
-            username:"",
-            password:"",
-            remember:false
-        }
-
-        this.handleUsernameChange = this.handleUsernameChange.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
-        this.handleRemembermeChange = this.handleRemembermeChange.bind(this);
-        this.doLogin = this.doLogin.bind(this);
-        this.loginSuccess = this.loginSuccess.bind(this);
+    const loginSuccess = (token, user) => {
+        props.loginSuccess(token, user);
     }
 
-    handleUsernameChange(typedUserName) {
-        this.setState({username:typedUserName});
-    }
-
-    handlePasswordChange(typedPassword) {
-        this.setState({password:typedPassword});
-    }
-
-    handleRemembermeChange(checked) {
-        this.setState({remember:checked});
-    }
-
-    loginSuccess(token, user) {
-        this.props.loginSuccess(token, user);
-    }
-
-    async doLogin() {
+    const doLogin = () => {
         
         try {
 
-            if(this.state.username && this.state.password) {
-                let response = await fetch(SERVER_ADDRESS , {
+            if(username && password) {
+                fetch(SERVER_ADDRESS+'/login' , {
                     method: SERVER_METHOD_POST,
                     headers: SERVER_HEADER,
-                    body: JSON.stringify({username: this.state.username, password: this.state.password})
-                });
+                    body: JSON.stringify({username: username, password: password})
+                })
+                .then(response => response.json())
+                .then(data => {
 
-                let json = await response.json();
-                if(json.status) {
-                    this.loginSuccess(json.token, json.user);
-                }
+                    if(data.status) {
+                        
+                        loginSuccess(data.token, data.user);
+
+                        if(remember) {
+
+                            jose.jwtDecrypt(data.token, password, {})
+                                .then(out => out.payload)
+                                .then(payload => {console.log(payload)})
+
+                            // localStorage.setItem(props.sessionKey, key);
+                        }
+                    }
+                })
             }
             else {
                 notification.error({
@@ -71,18 +59,16 @@ export class Login extends React.Component {
         }
     }
 
-    render() {
-        return(
-            <Layout style={{backgroundColor:"#FFFFFF"}}>
+    return(
+        <Layout style={{backgroundColor:"#FFFFFF"}}>
                 <div align="center" style={{margin:20, padding:20, backgroundColor:"#FFFFFF", width:"100%"}}>
                     <Card title="Enter your login Information" bordered={true} style={{width:"35%", height:"35%", borderRadius:10, borderColor:"#BFBFBF"}}>
-                        <Name username={this.state.username} onUserNameChange={this.handleUsernameChange}/>
-                        <Password password={this.state.password} onPasswordChange={this.handlePasswordChange}/>
-                        <RememberMe remember={this.state.remember} onRememberMeChange={this.handleRemembermeChange}/>
-                        <Submit doLogin={this.doLogin}/>
+                        <Name username={username} onUserNameChange={setUsername}/>
+                        <Password password={password} onPasswordChange={setPassword}/>
+                        <RememberMe remember={remember} handleRemembermeChange={setRemember}/>
+                        <Submit doLogin={doLogin}/>
                     </Card>
                 </div>
-            </Layout>
-        )
-    }
+        </Layout>
+    );
 }

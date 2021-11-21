@@ -1,33 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ApplicationUI from './ApplicationUI';
 import { Login } from './login/Login';
+import { jwtDecrypt } from 'jose';
 
-export default class App extends React.Component {
+export default function App(props) {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      token:null,
-      user:null
-    };
+  const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
+  const sessionKey = "REMEMBER_ME_KEY";
 
-    this.onLoginSuccess = this.onLoginSuccess.bind(this);
+  const onLoginSuccess = (token, user) => {
+    setToken(token);
+    setUser(user);
   }
 
-  onLoginSuccess(_token, _user) {
-    this.setState({
-      token:_token,
-      user:_user
-    });
-  }
+  const rememberSomething = () => {
 
-  render() {
+    try {
 
-    if(this.state.token) {
-      return (<ApplicationUI token={this.state.token} user={this.state.user}/>)
+      let prof = localStorage.getItem(sessionKey);
+      if(prof && prof.time && prof.token && prof.user) {
+
+        setToken(prof.token);
+        setUser(prof.user);
+      }
     }
-    else {
-      return (<Login loginSuccess={this.onLoginSuccess}/>);
-    }
+    catch(e) {}
+
+    return token;
   }
+
+  return(
+    rememberSomething()? 
+    <ApplicationUI token={token} user={user} sessionKey={sessionKey}/>:
+    <Login loginSuccess={onLoginSuccess} sessionKey={sessionKey}/>
+  );
 }
